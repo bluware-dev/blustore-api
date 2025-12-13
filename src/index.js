@@ -3,7 +3,7 @@ import express from 'express';
 import { access, constants } from 'fs/promises';
 import path from 'path';
 
-import apiRoutes from '#api/apiRoutes.js';
+import apiRouter from '#api/apiRouter.js';
 import { corsOptions, ENV_SERVER } from '#config/globals.js';
 import errorHandler from '#middlewares/errorHandler.js';
 import { ERROR_MESSAGES, STATUS } from '#utils/http.js';
@@ -28,7 +28,7 @@ app.use(cors(corsOptions));
 app.disable('x-powered-by');
 
 // api
-app.use('/api', apiRoutes);
+app.use('/api', apiRouter);
 
 // health
 app.use('/health', (_req, res) =>
