@@ -1,6 +1,6 @@
 ###
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOiJib2IiLCJpYXQiOjE3NjU0Njk0MzUsImV4cCI6MTc2NTQ3MzAzNX0.skcCD5etJ7x7-xAMPcA7tk_BickjPBu1yAu49c24fBA
+@token = YOUR_TOKEN
 
 ### PRODUCTS API
 

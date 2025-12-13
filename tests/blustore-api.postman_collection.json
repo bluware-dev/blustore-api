@@ -1,11 +1,11 @@
 {
 	"info": {
-		"_postman_id": "8720ae8d-e0fa-48d9-8048-4e5c75b78b94",
+		"_postman_id": "f6b2889c-ae09-4f75-992e-3f102be2655f",
 		"name": "BluStore API",
-		"description": "**BluStore API** es un backend REST simple para manejar usuarios y productos.\n\n- **Auth:** Registro y login con JWT.\n    \n- **Productos:** CRUD completo (crear, leer, actualizar, eliminar).\n    \n- **Seguridad:** Endpoints protegidos con Bearer Token.\n    \n- **Otros:** Health check del servicio.\n    \n\nTodo usa JSON siguiendo un contrato formal de respuesta.",
+		"description": "**BluStore API** es un backend REST simple para manejar usuarios y productos.\n\n- **Auth:** Registro y login con JWT.\n    \n- **Productos:** CRUD completo (crear, leer, actualizar, eliminar).\n    \n- **Seguridad:** Endpoints protegidos con Bearer Token.\n    \n- **Otros:** Health check del servicio.\n    \n\nTodo usa JSON siguiendo un contrato formal de respuesta.\n\n**Primeros pasos:**\n\n- Configura `baseURL` en: [https://blustore-api.vercel.app](https://blustore-api.vercel.app) o tu `localhost`\n    \n- Login Demo <u>(Prueba de JWT)</u> `[token automatizado]`\n    \n- Register -> Login <u>(Variables automaticas)</u> `[token automatizado]`\n    \n- POST, PATCH, DELETE <u>(Necesitan token)</u> `[ejecutar Register/Login antes]`",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "50668572",
-		"_collection_link": "https://bluware-dev-6264346.postman.co/workspace/f9c0837a-fdc0-402f-8bf8-64772ee0b914/collection/50668572-8720ae8d-e0fa-48d9-8048-4e5c75b78b94?action=share&source=collection_link&creator=50668572"
+		"_collection_link": "https://bluware-dev-6264346.postman.co/workspace/f9c0837a-fdc0-402f-8bf8-64772ee0b914/collection/50668572-f6b2889c-ae09-4f75-992e-3f102be2655f?action=share&source=collection_link&creator=50668572"
 	},
 	"item": [
 		{
@@ -111,7 +111,7 @@
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": "",
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Vary",
@@ -183,7 +183,7 @@
 							},
 							"status": "Bad Request",
 							"code": 400,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Vary",
@@ -249,7 +249,7 @@
 							},
 							"status": "Unauthorized",
 							"code": 401,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Vary",
@@ -396,7 +396,7 @@
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Vary",
@@ -462,7 +462,7 @@
 							},
 							"status": "Bad Request",
 							"code": 400,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Vary",
@@ -686,7 +686,7 @@
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Vary",
@@ -833,7 +833,7 @@
 							},
 							"status": "Bad Request",
 							"code": 400,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Vary",
@@ -950,7 +950,7 @@
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Vary",
@@ -1077,7 +1077,7 @@
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Vary",
@@ -1145,7 +1145,7 @@
 							},
 							"status": "Not Found",
 							"code": 404,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Vary",
@@ -1296,7 +1296,7 @@
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Vary",
@@ -1372,7 +1372,7 @@
 							},
 							"status": "Not Found",
 							"code": 404,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Vary",
@@ -1435,7 +1435,7 @@
 							},
 							"status": "Unauthorized",
 							"code": 401,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Vary",
@@ -1511,7 +1511,7 @@
 							},
 							"status": "Bad Request",
 							"code": 400,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Vary",
@@ -1627,7 +1627,7 @@
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Vary",
@@ -1695,7 +1695,7 @@
 							},
 							"status": "Not Found",
 							"code": 404,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Vary",
@@ -1798,7 +1798,7 @@
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Vary",
