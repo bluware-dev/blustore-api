@@ -1,4 +1,4 @@
-<h1 align="center">**BluStore API**</h1>
+<h1 align="center">BluStore API</h1>
 <p align="center">
   <img src="https://img.shields.io/badge/Node.js-20.x-339933?logo=node.js&logoColor=white" alt="Node.js Badge">
   <img src="https://img.shields.io/badge/Express.js-API-black?logo=express&logoColor=white" alt="Express Badge">
@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-<em>API REST minimalista y modular para autenticación y gestión de productos, persistida en archivos JSON (**data‑driven**), construida con Express y JavaScript moderno (ESM).</em>
+<em>API REST minimalista y modular para autenticación y gestión de productos, persistida en archivos JSON (<b>data‑driven</b>), construida con Express y JavaScript moderno (ESM).</em>
 </p>
 
 ---
@@ -45,7 +45,7 @@ pnpm dev
 npm run dev
 ```
 
-> **Nota**: En el deploy disponible en vercel las credenciales del usuario de demostración es: `{ username: "bob", password: "1234" }`
+> **Nota**: En el deploy disponible en vercel las credenciales del usuario de demostración son: `{ username: "bob", password: "1234" }`
 
 ---
 
