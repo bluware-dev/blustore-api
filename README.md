@@ -25,7 +25,8 @@
 ✅ **Validaciones defensivas** de payloads y parámetros.<br>
 ✅ **Alias de paths** vía <code>jsconfig.json</code>.<br>
 ✅ **Tests manuales** mediante archivos <code>.http</code> y Postman Collection.<br>
-🟪 **Documentacion Frontend 'MVC'** mediante Astro Starlight (MD, MDX) y Starlight OpenAPI. `[En desarrollo temprano]`
+✅ **Rate limiting vía Vercel WAF** `[10req/min]`<br>
+🟪 **Documentación Frontend 'MVC'** mediante Astro Starlight (MD, MDX) y Starlight OpenAPI. `[En desarrollo temprano]`
 <br>
 
 </p>

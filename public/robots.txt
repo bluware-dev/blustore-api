@@ -1,5 +1,5 @@
 User-agent: *
-Disallow: /api/
-Allow: /docs/
+Disallow: /api
+Allow: /docs
 
-Sitemap: https://blustore.vercel.app/sitemap.xml
+Sitemap: https://blustore-api.vercel.app/sitemap.xml
