@@ -1,0 +1,58 @@
+---
+title: BluStore API
+description: API REST para gestión de productos y autenticación, con soporte JSON y Firestore.
+template: splash
+hero:
+    title: 'BluStore API'
+    tagline: API REST minimalista · Express · JWT · Firebase
+    image:
+        file: ../../../assets/houston.webp
+    actions:
+        - text: Guía rápida
+          link: guides/introduction
+          icon: right-arrow
+        - text: Referencia de la API
+          link: reference
+          icon: open-book
+        - text: GitHub
+          link: https://github.com/bluware-dev/blustore-api
+          newTab: true
+          icon: external
+          variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+<em align="center" style="margin-bottom: 2rem;">
+	**Nota: esta documentación se encuenta en estado de desarrollo temprano.**
+</em>
+
+<h2 align="center" style="margin-bottom: 2rem;">
+	Caracteristicas
+</h2>
+
+<CardGrid stagger>
+  <Card title="Arquitectura clara" icon="pencil">
+    **Controller · Service · Model**
+  </Card>
+
+<Card title="Autenticación JWT" icon="seti:lock">
+	Login y registro con tokens firmados y expiración configurable.
+</Card>
+
+<Card title="Persistencia flexible" icon="seti:firebase">
+	Dos ramas de repositorio: JSON local o Firebase Firestore.
+</Card>
+
+<Card title="RESTful" icon="seti:code-search">
+	Endpoints predecibles, status codes correctos y contratos normalizados.
+</Card>
+
+<Card title="Testing incluido" icon="seti:todo">
+	Colección pública de Postman y requests HTTP de ejemplo.
+</Card>
+
+  <Card title="Deploy listo" icon="rocket">
+    Compatible con Vercel Functions.
+  </Card>
+</CardGrid>

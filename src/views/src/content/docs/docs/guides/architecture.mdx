@@ -1,0 +1,203 @@
+---
+title: Arquitectura
+description: Decisiones de arquitectura, diseño y separación de responsabilidades.
+---
+
+import { Picture } from 'astro:assets';
+
+import flowDark from '@/assets/flow-dark.svg';
+
+## Principios de Diseño
+
+Esta API sigue una arquitectura en capas inspirada en **'Clean Architecture'** y principios UNIX: modularidad, separación de responsabilidades, y componentes desacoplados que pueden evolucionar independientemente.
+
+> **Nota Tecnica Realista**: Esta API realmente implementa [**Layered Architecture (3-Tier)**](https://www.geeksforgeeks.org/computer-networks/layered-architecture-in-computer-networks/) con [Transaction Script Pattern](https://awesome-architecture.com/design-patterns/transaction-script-pattern/),
+> separando presentación (Routes/Controllers), lógica de negocio (Services),
+> y acceso a datos (Models) en capas horizontales desacopladas.
+
+**Filosofía core:**
+
+- **KISS**: Simplicidad sobre abstracción prematura
+- **DRY**: Normalización de códigos HTTP, mensajes de error y lógica de negocio
+- **Separation of Concerns**: Cada capa tiene una responsabilidad única y bien definida
+- **Dependency Flow**: Las dependencias fluyen hacia adentro (Routes → Controllers → Services → Models)
+
+---
+
+## Capas y Responsabilidades
+
+| Capa            | Responsabilidad                                                | Maneja Estado | Depende de  |
+| --------------- | -------------------------------------------------------------- | ------------- | ----------- |
+| **Routes**      | Define endpoints HTTP, aplica middlewares, delega a controller | No            | Controllers |
+| **Controllers** | Valida request, coordina service, serializa response HTTP      | No            | Services    |
+| **Services**    | Lógica de dominio, orquestación, transformaciones de datos     | Opcional      | Models      |
+| **Models**      | Acceso directo a persistencia (queries, CRUD atómico)          | Opcional      | Firebase/DB |
+
+### Detalles por Capa
+
+**Routes**: Punto de entrada HTTP. Registra endpoints, aplica middlewares (auth, CORS), y delega inmediatamente al controlador. No contiene lógica de negocio.
+
+**Controllers**: Capa de coordinación. Valida payloads y parámetros de entrada, invoca el servicio apropiado, captura errores y delega al error handler, serializa respuestas usando `sendResponse()` con códigos HTTP normalizados.
+
+**Services**: Core de la lógica de negocio. Orquesta operaciones complejas (crear producto con ID autoincrementable), transforma datos entre capas, gestiona reglas de dominio (validación de credenciales, demo user), retorna objetos de estado estandarizados (`{success, status, data}`).
+
+**Models**: Capa de persistencia pura. Ejecuta queries directas a Firebase (addDoc, getDocs, updateDoc, deleteDoc), maneja errores de conexión/query, retorna datos crudos o undefined. No contiene lógica de negocio.
+
+---
+
+## Flujo de Datos
+
+<Picture src={flowDark} alt="Architecture Flow" />
+
+**Request Flow:**
+
+```
+HTTP Request → Route → Controller → Service → Model → Firebase
+```
+
+**Response Flow:**
+
+```
+Firebase → Model (data/throw) → Service (result object) → Controller (HTTP serialization) → Client
+```
+
+**Error Flow:**
+
+```
+Model (throw) → Service (propagate) → Controller (next(err)) → errorHandler → HTTP Error Response
+```
+
+---
+
+## Convenciones de Código
+
+### Controllers y Services: Namespace Pattern
+
+Funciones puras exportadas como namespace. Sin clases, sin estado compartido.
+
+**Nomenclatura estándar CRUD:**
+
+- `create(req, res, next)` - POST
+- `getAll(req, res, next)` - GET collection
+- `getById(req, res, next)` - GET resource
+- `update(req, res, next)` - PATCH (partial update)
+- `remove(req, res, next)` - DELETE (evita shadowing de keyword `delete`)
+
+**Importación:**
+
+```js
+import * as productController from '#api/products/product.controller.js';
+
+router.post('/create', auth, productController.create);
+```
+
+### Normalización de Respuestas
+
+Todas las respuestas HTTP usan `sendResponse()` para garantizar formato consistente:
+
+```js
+// Success
+{ success: true, code: 200, data: {...} }
+
+// Error
+{ success: false, code: 400, error: "Datos inválidos o incompletos" }
+```
+
+**Abstracciones:**
+
+- `STATUS`: Símbolos para estados (`STATUS.SUCCESS`, `STATUS.NOT_FOUND`)
+- `HTTP_MAP`: Mapeo de símbolos a códigos numéricos HTTP
+- `ERROR_MESSAGES`: Mensajes normalizados, evita magic strings
+
+---
+
+## Persistencia: Firebase Firestore
+
+### Características
+
+- **NoSQL documental**: Colecciones de documentos con esquema flexible
+- **Queries indexadas**: `where()`, `orderBy()`, `limit()` - no son SQL
+- **Sin servidor propio**: Managed service, escalado automático
+- **Limitaciones**: Joins inexistentes, queries complejas requieren denormalización
+
+### Diferencias con MongoDB
+
+| Aspecto       | Firestore                                    | MongoDB                           |
+| ------------- | -------------------------------------------- | --------------------------------- |
+| Formato       | JSON nativo                                  | BSON (Binary JSON)                |
+| Hosting       | Managed (GCP)                                | Self-hosted / Atlas               |
+| Queries       | Limitadas, indexadas automáticamente         | Agregaciones complejas, pipelines |
+| Transacciones | Soportadas (ACID en documentos relacionados) | Soportadas (ACID multi-documento) |
+
+### Estructura Actual
+
+```
+users/
+  └─ {userId}
+      ├─ username: string
+      └─ password: string (⚠️ plaintext, solo demo)
+
+products/
+  └─ {productId}
+      ├─ id: number (internal autoincrement)
+      ├─ name: string
+      ├─ price: number
+      └─ categories: array<string>
+```
+
+### ID Management
+
+**Problema conocido**: Race conditions en `createProduct()` al obtener `lastId` de forma no transaccional.
+
+**Solución actual**: Pragmática, suficiente para carga baja/media.
+
+[**Solución robusta**: Usar transacciones de Firestore](https://firebase.google.com/docs/firestore/manage-data/transactions)
+
+---
+
+## Seguridad y Limitaciones
+
+### Implementado
+
+- ✅ JWT con expiración configurable
+- ✅ Middleware de autenticación en rutas protegidas
+- ✅ CORS configurado para dominios específicos
+- ✅ Validación de payloads en controllers
+- ✅ Rate limiting vía Vercel WAF
+
+### Pendiente (Production Readiness)
+
+- ⚠️ **Passwords en plaintext**: Implementar bcrypt/argon2 hashing
+- ⚠️ **Validación limitada**: Faltan límites de longitud, sanitización XSS
+- ⚠️ **Sin logging estructurado**: console.error no escala en producción
+- ⚠️ **Sin tests automatizados**: Cobertura manual con Postman/HTTP files
+
+---
+
+## Escalabilidad y Evolución
+
+### Ventajas de la Arquitectura Actual
+
+**Desacoplamiento horizontal**: Agregar nuevas entidades (orders, categories) solo requiere nuevo módulo en `api/`, sin modificar infraestructura existente.
+
+**Migración de persistencia**: Cambiar Firebase por PostgreSQL/MongoDB solo afecta la capa de Models. Services apenas mutan y Controllers permanecen intactos gracias a la abstracción de `result` objects.
+
+**Testing incremental**: Cada capa puede testearse independientemente (unit tests en Services, integration tests en Controllers, E2E en Routes).
+
+### Próximos Pasos Arquitectónicos
+
+En un nuevo repositorio, o como extensión escalable de este mismo:
+
+1. **Transacciones en Models**: Resolver race conditions con Firestore transactions
+2. **Middleware de validación**: Extraer validaciones repetitivas a middleware reutilizable con Joi/Zod
+3. **Error types personalizados**: Clases de error específicas (ValidationError, AuthError) para mejor debugging
+4. **Repository pattern**: Abstraer queries complejas en repositorios dedicados si Firestore queries crecen
+
+---
+
+### Recursos utiles
+
+- [Firebase Firestore Docs](https://firebase.google.com/docs/firestore)
+- [Clean Architecture (Uncle Bob)](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+- [Express Best Practices](https://expressjs.com/en/advanced/best-practice-performance.html)
+- [OWASP API Security Top 10](https://owasp.org/www-project-api-security/)

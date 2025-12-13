@@ -1,0 +1,21 @@
+{
+	"name": "blustore-docs",
+	"type": "module",
+	"version": "0.0.1",
+	"scripts": {
+		"dev": "astro dev",
+		"start": "astro dev",
+		"build": "astro build && astro check",
+		"preview": "astro preview",
+		"astro": "astro"
+	},
+	"dependencies": {
+		"@astrojs/check": "^0.9.6",
+		"@astrojs/starlight": "^0.37.0",
+		"astro": "^5.16.3",
+		"prettier": "^3.7.3",
+		"sharp": "^0.34.5",
+		"starlight-openapi": "^0.21.1",
+		"typescript": "^5.9.3"
+	}
+}

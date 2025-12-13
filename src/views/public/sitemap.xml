@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+	<url>
+		<loc>https://blustore-api.vercel.app/docs/</loc>
+		<changefreq>monthly</changefreq>
+	</url>
+	<url>
+		<loc>https://blustore-api.vercel.app/docs/guides/introduction/</loc>
+		<changefreq>monthly</changefreq>
+	</url>	
+	<url>
+		<loc>https://blustore-api.vercel.app/docs/guides/architecture/</loc>
+		<changefreq>monthly</changefreq>
+	</url>
+	<url>
+		<loc>https://blustore-api.vercel.app/docs/reference/</loc>
+		<changefreq>monthly</changefreq>
+	</url>
+</urlset>
