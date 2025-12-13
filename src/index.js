@@ -29,6 +29,7 @@ app.disable('x-powered-by');
 
 // public/
 app.use('/', express.static(path.join(ENV_SERVER.DIRNAME, 'public'))); // solo localhost, Vercel ignora static serve
+app.get('/', (_req, res) => res.redirect('/index.html'));
 
 // api
 app.use('/api', apiRouter);
