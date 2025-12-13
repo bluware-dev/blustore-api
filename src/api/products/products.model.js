@@ -57,7 +57,7 @@ export async function createProduct(product) {
 
 		await addDoc(productsCol, { id: nextId, ...product });
 
-		return product;
+		return { id: nextId, ...product };
 	} catch (err) {
 		console.error(
 			'[createProduct] fallo al intentar crear un producto:',
