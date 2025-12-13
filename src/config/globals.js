@@ -6,11 +6,6 @@ export const ENV_SERVER = Object.freeze({
 	DIRNAME: process.cwd(),
 });
 
-export const ENV_PATHS = Object.freeze({
-	PRODUCTS_PATH: process.env.PRODUCTS_PATH,
-	USERS_PATH: process.env.USERS_PATH,
-});
-
 // CORS
 // Nota: usar variables de entorno especificas para features en vez de NODE_ENV (ver scripts.dev en package.json)
 const allowLocalhost = process.env.LOCALHOST_CORS === 'true';

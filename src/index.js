@@ -27,8 +27,18 @@ app.use(express.json());
 app.use(cors(corsOptions));
 app.disable('x-powered-by');
 
+// public/
+app.use('/', express.static(path.join(ENV_SERVER.DIRNAME, 'public'))); // solo localhost, Vercel ignora static serve
+
 // api
 app.use('/api', apiRouter);
+app.use('/api', (_req, res, _next) => {
+	sendResponse(
+		res,
+		{ success: false, status: STATUS.NOT_FOUND },
+		ERROR_MESSAGES.NOT_FOUND
+	);
+});
 
 // health
 app.use('/health', (_req, res) =>
@@ -39,14 +49,8 @@ app.use('/health', (_req, res) =>
 	})
 );
 
-// 404 + error handler
-app.use('/', (_req, res, _next) => {
-	sendResponse(
-		res,
-		{ success: false, status: STATUS.NOT_FOUND },
-		ERROR_MESSAGES.NOT_FOUND
-	);
-});
+// 404s + error handler
+app.use('/', (_req, res) => res.redirect('/404.html'));
 app.use(errorHandler);
 
 app.listen(ENV_SERVER.PORT, () => {
