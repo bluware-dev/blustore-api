@@ -1,0 +1,64 @@
+###
+
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOiJib2IiLCJpYXQiOjE3NjU0Njk0MzUsImV4cCI6MTc2NTQ3MzAzNX0.skcCD5etJ7x7-xAMPcA7tk_BickjPBu1yAu49c24fBA
+
+### PRODUCTS API
+
+# Listado completo
+GET http://localhost:3000/api/products/ HTTP/1.1
+
+###
+
+# Obtener por ID
+GET http://localhost:3000/api/products/1 HTTP/1.1
+###
+GET http://localhost:3000/api/products/2 HTTP/1.1
+###
+GET http://localhost:3000/api/products/3 HTTP/1.1
+###
+GET http://localhost:3000/api/products/9999 HTTP/1.1
+
+###
+
+# Crear producto
+POST http://localhost:3000/api/products/create HTTP/1.1
+content-type: application/json
+authorization: Bearer {{token}}
+
+{
+	"name": "Notebook Lenovo Thinkpad",
+	"price": 800000,
+	"categories": ["Tecnología", "Computadoras", "Notebooks"]
+}
+
+###
+
+# Crear producto (Bad Request)
+POST http://localhost:3000/api/products/create HTTP/1.1
+content-type: application/json
+authorization: Bearer {{token}}
+
+{}
+
+###
+
+# Actualizar todo un producto (PATCH)
+PATCH http://localhost:3000/api/products/update HTTP/1.1
+content-type: application/json
+authorization: Bearer {{token}}
+
+{
+    "id": 6,
+    "price": 950000
+}
+
+###
+
+# Eliminar por ID
+DELETE http://localhost:3000/api/products/6 HTTP/1.1
+authorization: Bearer {{token}}
+###
+DELETE http://localhost:3000/api/products/7 HTTP/1.1
+authorization: Bearer {{token}}
+
+###
