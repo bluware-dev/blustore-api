@@ -3,6 +3,7 @@
   <img src="https://img.shields.io/badge/Node.js-20.x-339933?logo=node.js&logoColor=white" alt="Node.js Badge">
   <img src="https://img.shields.io/badge/Express.js-API-black?logo=express&logoColor=white" alt="Express Badge">
   <img src="https://img.shields.io/badge/Storage-Firebase-orange" alt="Firebase Badge">
+  <img src="https://img.shields.io/badge/Astro-Starlight-magenta" alt="Astro Badge">
   <img src="https://img.shields.io/badge/License-MIT-blue?logo=open-source-initiative&logoColor=white" alt="MIT License Badge">
 </p>
 
@@ -24,6 +25,8 @@
 ✅ **Validaciones defensivas** de payloads y parámetros.<br>
 ✅ **Alias de paths** vía <code>jsconfig.json</code>.<br>
 ✅ **Tests manuales** mediante archivos <code>.http</code> y Postman Collection.<br>
+🟪 **Documentacion Frontend 'MVC'** mediante Astro Starlight (MD, MDX) y Starlight OpenAPI. `[En desarrollo temprano]`
+<br>
 
 </p>
 
@@ -48,6 +51,8 @@ npm run dev
 > **API base**: [https://blustore-api.vercel.app/api](https://blustore-api.vercel.app/api)
 
 > **Astro Starlight OpenAPI**: [https://blustore-api.vercel.app/docs](https://blustore-api.vercel.app/docs) [En desarrollo]
+
+> [**Postman Workspace Público**](<https://bluware-dev-6264346.postman.co/workspace/Elian-Jofre-(Blu)'s-Workspace~f9c0837a-fdc0-402f-8bf8-64772ee0b914/collection/50668572-f6b2889c-ae09-4f75-992e-3f102be2655f?action=share&creator=50668572&active-environment=50668572-0dc42c52-0a7b-4796-9faf-56b50a867b54>)
 
 ---
 
@@ -75,7 +80,8 @@ src/
  │   └── products/         # Products CRUD -> Firebase
  ├── middlewares/          # Auth + error handler
  ├── config/               # Globals + JWT + Firebase
- └── utils/                # HTTP status + response helpers
+ ├── utils/                # HTTP status + response helpers
+ └── views/                # Astro Starlight + OpenAPI
 ```
 
 ---
