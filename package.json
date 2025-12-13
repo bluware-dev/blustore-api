@@ -1,0 +1,31 @@
+{
+	"name": "blustore-api",
+	"version": "1.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "CORS_LOCALHOST=true node --watch-path=src/ src/index.js",
+		"start": "node src/index.js",
+		"lint": "prettier --write . && eslint --fix .",
+		"eslint": "eslint . --max-warnings=0"
+	},
+	"imports": {
+		"#api/*": "./src/api/*",
+		"#middlewares/*": "./src/middlewares/*",
+		"#config/*": "./src/config/*",
+		"#utils/*": "./src/utils/*",
+		"#data": "./data/*"
+	},
+	"dependencies": {
+		"cors": "^2.8.5",
+		"dotenv": "^17.2.3",
+		"express": "^5.1.0",
+		"jsonwebtoken": "^9.0.3"
+	},
+	"devDependencies": {
+		"eslint": "^9.39.1",
+		"eslint-plugin-import": "^2.32.0",
+		"globals": "^16.5.0",
+		"prettier": "^3.7.2"
+	},
+	"packageManager": "pnpm@10.17.1"
+}

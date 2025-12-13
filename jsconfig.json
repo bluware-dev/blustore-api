@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"module": "esnext",
+		"baseUrl": ".",
+		"paths": {
+			"#api/*": ["src/api/*"],
+			"#middlewares/*": ["src/middlewares/*"],
+			"#config/*": ["src/config/*"],
+			"#utils/*": ["src/utils/*"],
+			"#data/*": ["data/*"]
+		}
+	},
+	"exclude": ["node_modules", "src/views/**/*"]
+}
