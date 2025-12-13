@@ -47,7 +47,7 @@ npm run dev
 
 > **API base**: [https://blustore-api.vercel.app/api](https://blustore-api.vercel.app/api)
 
-> **Astro Starlight OpenAPI**: [https://blustore-api.vercel.app/docs](https://blustore-api.vercel.app/docs)
+> **Astro Starlight OpenAPI**: [https://blustore-api.vercel.app/docs](https://blustore-api.vercel.app/docs) [En desarrollo]
 
 ---
 
@@ -86,11 +86,15 @@ src/
 <em>
 Proyecto intencionalmente minimalista y modular:
 </br>
-Firebase como storage, lógica explícita, cero magia.
+Firebase como storage, lógica documentada vía referencias oficiales.
 </br>
-Inspirado en principios UNIX, KISS y Clean Code, priorizando legibilidad, separación de responsabilidades y evolución progresiva.
+Inspirado en principios UNIX, KISS y Clean Code, priorizando legibilidad, SRP y escalabilidad.
 </em>
 </p>
+
+> **Aclaración**: Este proyecto fue desarrollado íntegramente por mí (Elian “Blu” Jofré) [bluware-dev]. ChatGPT se utilizó solo con fines académicos y de consulta: discusión de diseño, arquitectura, criterios técnicos, validación conceptual, revisión de errores y documentación, además de snippets mínimos ilustrativos.
+
+> El código fue escrito y decidido manualmente; no se usó generación automática ni copy/paste asistido, ni herramientas como Copilot, CodeAI CLIs, Cursor/Windsurf o MCPs.
 
 ---
 
