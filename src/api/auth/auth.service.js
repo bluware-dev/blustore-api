@@ -24,13 +24,12 @@ export async function register(credentials) {
 	if (demoUser.username == credentials.username)
 		return { success: false, status: STATUS.CONFLICT };
 
-	const usersDB = await authModel.readUsers();
+	const usersDB = await authModel.getAllUsers();
 
 	if (usersDB.find((entry) => entry.username == credentials.username))
 		return { success: false, status: STATUS.CONFLICT };
 
-	usersDB?.push(credentials);
-	await authModel.writeUsers(usersDB);
+	await authModel.addUser(credentials);
 
 	return { success: true, status: STATUS.SUCCESS, data: credentials };
 }
@@ -43,10 +42,7 @@ export async function login(credentials) {
 			data: buildJwt(demoUser.username),
 		};
 
-	const usersDB = await authModel.readUsers();
-	const user = usersDB?.find(
-		(entry) => entry.username == credentials.username
-	);
+	const user = await authModel.getUser(credentials.username);
 
 	if (user && validateCredentials(credentials, user))
 		return {

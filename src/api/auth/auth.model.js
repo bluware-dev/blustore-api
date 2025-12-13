@@ -1,32 +1,82 @@
-import fs from 'fs/promises';
-import path from 'path';
+import {
+	addDoc,
+	getDocs,
+	collection,
+	query,
+	where,
+	limit,
+} from 'firebase/firestore';
 
-import { ENV_SERVER, ENV_PATHS } from '#config/globals.js';
+import { db } from '#config/firestore.js';
 
-export async function readUsers() {
+const getSnapByUsername = async (username) => {
 	try {
-		const data = await fs.readFile(
-			path.join(ENV_SERVER.DIRNAME, ENV_PATHS.USERS_PATH),
-			'utf-8'
+		return await getDocs(
+			query(
+				collection(db, 'users'),
+				where('username', '==', String(username)),
+				limit(1)
+			)
 		);
-		return JSON.parse(data);
 	} catch (err) {
-		console.error('[readUsers] fallo lectura/parsing:', err.message);
-		if (err.code === 'ENOENT') return [];
+		console.error(
+			'[getSnapByUsername] fallo obteniendo username via query:',
+			err.message
+		);
+		throw err;
+	}
+};
+
+export async function addUser(credentials) {
+	try {
+		const usersCol = collection(db, 'users');
+		// https://firebase.google.com/docs/reference/js/firestore_.querysnapshot#querysnapshotdocs
+		await addDoc(usersCol, { ...credentials });
+
+		return credentials;
+	} catch (err) {
+		console.error('[addUser] fallo al añadir credenciales:', err.message);
 		throw err;
 	}
 }
 
-export async function writeUsers(users) {
+export async function getUser(username) {
+	// https://firebase.google.com/docs/firestore/query-data/get-data#get_multiple_documents_from_a_collection
 	try {
-		await fs.writeFile(
-			path.join(ENV_SERVER.DIRNAME, ENV_PATHS.USERS_PATH),
-			JSON.stringify(users, null, 4)
-		);
+		const usernameSnap = await getSnapByUsername(username);
+
+		// https://firebase.google.com/docs/reference/js/firestore_.querysnapshot#querysnapshotempty
+		if (usernameSnap.empty) return;
+
+		// https://firebase.google.com/docs/reference/js/firestore_.querysnapshot#querysnapshotdocs
+		const credentials = usernameSnap.docs[0];
+
+		return credentials.data();
 	} catch (err) {
-		console.error('[writeUsers] fallo lectura/parsing:', err.message);
-		if (err.code === 'ENOENT')
-			throw new Error('Ruta inválida: el directorio no existe');
+		console.error('[getUser] fallo al obtener credenciales:', err.message);
+		throw err;
+	}
+}
+
+export async function getAllUsers() {
+	// https://firebase.google.com/docs/firestore/query-data/get-data#get_multiple_documents_from_a_collection
+	try {
+		const usersSnap = await getDocs(collection(db, 'users'));
+		// https://firebase.google.com/docs/reference/js/firestore_.querysnapshot#querysnapshotempty
+		if (usersSnap.empty) return [];
+
+		const users = [];
+		// https://firebase.google.com/docs/reference/js/firestore_.querysnapshot.md#querysnapshotforeach
+		usersSnap.forEach((doc) => {
+			users.push(doc.data());
+		});
+
+		return users;
+	} catch (err) {
+		console.error(
+			'[getAllUsers] fallo al obtener credenciales:',
+			err.message
+		);
 		throw err;
 	}
 }
