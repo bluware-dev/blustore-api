@@ -1,0 +1,1059 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"title": "Referencia de la API",
+		"version": "0.0.1",
+		"description": "**BluStore API** es un backend REST simple para manejar usuarios y productos.\n\n- **Auth:** Registro y login con JWT.\n    \n- **Productos:** CRUD completo (crear, leer, actualizar, eliminar).\n    \n- **Seguridad:** Endpoints protegidos con Bearer Token.\n    \n- **Otros:** Health check del servicio.\n    \n\nTodo usa JSON siguiendo un contrato formal de respuesta.\n\n**Primeros pasos (Postman):**\n\n- Configurar `baseURL` en: [https://blustore-api.vercel.app](https://blustore-api.vercel.app) o tu `localhost` si es que no aparece disponible\n    \n- Login Demo <u>(Prueba de JWT)</u> `[token automatizado]`\n    \n- Register -> Login <u>(Variables automaticas)</u> `[token automatizado]`\n    \n- POST, PATCH, DELETE <u>(Necesitan token)</u> `[ejecutar Register/Login antes]`"
+	},
+	"servers": [
+		{
+			"url": "https://blustore-api.vercel.app"
+		}
+	],
+	"paths": {
+		"/api/auth/login": {
+			"post": {
+				"summary": "Login Demo",
+				"responses": {
+					"200": {
+						"description": "SUCCESS",
+						"headers": {
+							"Vary": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Origin"
+							},
+							"Access-Control-Allow-Credentials": {
+								"schema": {
+									"type": "boolean"
+								},
+								"example": "true"
+							},
+							"Content-Length": {
+								"schema": {
+									"type": "integer"
+								},
+								"example": "197"
+							},
+							"ETag": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "W/\"c5-0DVqt1dFuHQrrxGv3u3pOr7kETw\""
+							},
+							"Date": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Thu, 11 Dec 2025 18:26:13 GMT"
+							},
+							"Connection": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "keep-alive"
+							},
+							"Keep-Alive": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "timeout=5"
+							}
+						}
+					},
+					"400": {
+						"description": "VALIDATION_ERROR",
+						"headers": {
+							"Vary": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Origin"
+							},
+							"Access-Control-Allow-Credentials": {
+								"schema": {
+									"type": "boolean"
+								},
+								"example": "true"
+							},
+							"Content-Length": {
+								"schema": {
+									"type": "integer"
+								},
+								"example": "84"
+							},
+							"ETag": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "W/\"54-H3n/UH9GlS6fEhgDlCxUviRIy5k\""
+							},
+							"Date": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Thu, 11 Dec 2025 18:32:56 GMT"
+							},
+							"Connection": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "keep-alive"
+							},
+							"Keep-Alive": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "timeout=5"
+							}
+						}
+					},
+					"401": {
+						"description": "AUTH_INVALID_CREDENTIALS",
+						"headers": {
+							"Vary": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Origin"
+							},
+							"Access-Control-Allow-Credentials": {
+								"schema": {
+									"type": "boolean"
+								},
+								"example": "true"
+							},
+							"Content-Length": {
+								"schema": {
+									"type": "integer"
+								},
+								"example": "85"
+							},
+							"ETag": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "W/\"55-gJuImXzO6RS24uVAgWqXOXmS0P0\""
+							},
+							"Date": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Thu, 11 Dec 2025 18:31:22 GMT"
+							},
+							"Connection": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "keep-alive"
+							},
+							"Keep-Alive": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "timeout=5"
+							}
+						}
+					}
+				},
+				"tags": ["Auth"],
+				"description": "Login de usuario hardcodeado para demostración\n\n``` typescript\n{\n    username: string: \"bob\",\n    password: string: \"1234\"\n}\n\n ```",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"username": {
+										"type": "string"
+									},
+									"password": {
+										"type": "string",
+										"format": "utc-millisec"
+									}
+								}
+							},
+							"example": {
+								"username": "bob",
+								"password": "1234"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/register": {
+			"post": {
+				"summary": "Register",
+				"responses": {
+					"200": {
+						"description": "SUCCESS",
+						"headers": {
+							"Vary": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Origin"
+							},
+							"Access-Control-Allow-Credentials": {
+								"schema": {
+									"type": "boolean"
+								},
+								"example": "true"
+							},
+							"Content-Length": {
+								"schema": {
+									"type": "integer"
+								},
+								"example": "84"
+							},
+							"ETag": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "W/\"54-d/kGCQq3QRqJ/D+sB+ql08QfCPY\""
+							},
+							"Date": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Thu, 11 Dec 2025 18:30:17 GMT"
+							},
+							"Connection": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "keep-alive"
+							},
+							"Keep-Alive": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "timeout=5"
+							}
+						}
+					},
+					"400": {
+						"description": "VALIDATION_ERROR",
+						"headers": {
+							"Vary": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Origin"
+							},
+							"Access-Control-Allow-Credentials": {
+								"schema": {
+									"type": "boolean"
+								},
+								"example": "true"
+							},
+							"Content-Length": {
+								"schema": {
+									"type": "integer"
+								},
+								"example": "84"
+							},
+							"ETag": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "W/\"54-H3n/UH9GlS6fEhgDlCxUviRIy5k\""
+							},
+							"Date": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Thu, 11 Dec 2025 18:33:47 GMT"
+							},
+							"Connection": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "keep-alive"
+							},
+							"Keep-Alive": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "timeout=5"
+							}
+						}
+					}
+				},
+				"tags": ["Auth"],
+				"description": "Registrar un nuevo usuario\n\n``` typescript\n{\n    username: string,\n    password: string\n}\n\n ```",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object"
+							},
+							"example": "{\n    \"username\": \"alice\",\n    \"password\": \"1234\"\n}"
+						}
+					}
+				}
+			}
+		},
+		"/api/products/create": {
+			"post": {
+				"summary": "Crear Producto",
+				"responses": {
+					"200": {
+						"description": "SUCCESS",
+						"headers": {
+							"Vary": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Origin"
+							},
+							"Access-Control-Allow-Credentials": {
+								"schema": {
+									"type": "boolean"
+								},
+								"example": "true"
+							},
+							"Content-Length": {
+								"schema": {
+									"type": "integer"
+								},
+								"example": "154"
+							},
+							"ETag": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "W/\"9a-zkjnNFvr9pfEziChX6dU1g+IH4o\""
+							},
+							"Date": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Thu, 11 Dec 2025 19:00:55 GMT"
+							},
+							"Connection": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "keep-alive"
+							},
+							"Keep-Alive": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "timeout=5"
+							}
+						}
+					},
+					"400": {
+						"description": "VALIDATION_ERROR",
+						"headers": {
+							"Vary": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Origin"
+							},
+							"Access-Control-Allow-Credentials": {
+								"schema": {
+									"type": "boolean"
+								},
+								"example": "true"
+							},
+							"Content-Length": {
+								"schema": {
+									"type": "integer"
+								},
+								"example": "84"
+							},
+							"ETag": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "W/\"54-H3n/UH9GlS6fEhgDlCxUviRIy5k\""
+							},
+							"Date": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Thu, 11 Dec 2025 19:16:53 GMT"
+							},
+							"Connection": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "keep-alive"
+							},
+							"Keep-Alive": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "timeout=5"
+							}
+						}
+					},
+					"401": {
+						"description": "UNAUTHORIZED",
+						"headers": {
+							"Vary": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Origin"
+							},
+							"Access-Control-Allow-Credentials": {
+								"schema": {
+									"type": "boolean"
+								},
+								"example": "true"
+							},
+							"Content-Length": {
+								"schema": {
+									"type": "integer"
+								},
+								"example": "49"
+							},
+							"ETag": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "W/\"31-745jFqqEU0VFC/rtfxiNcpDpdss\""
+							},
+							"Date": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Thu, 11 Dec 2025 18:06:04 GMT"
+							},
+							"Connection": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "keep-alive"
+							},
+							"Keep-Alive": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "timeout=5"
+							}
+						},
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"code": {
+											"type": "string"
+										},
+										"error": {
+											"type": "string"
+										}
+									}
+								},
+								"example": {
+									"code": "UNAUTHORIZED",
+									"error": "Token inválido"
+								}
+							}
+						}
+					}
+				},
+				"tags": ["Products"],
+				"description": "Crear un nuevo producto.\n\n``` typescript\n{\n    name: string,\n    price: number,\n    categories: string[]\n}\n\n ```",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string"
+									},
+									"price": {
+										"type": "integer"
+									},
+									"categories": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									}
+								}
+							},
+							"example": {
+								"name": "Notebook Lenovo Thinkpad",
+								"price": 800000,
+								"categories": [
+									"Tecnología",
+									"Computadoras",
+									"Notebooks"
+								]
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/products": {
+			"get": {
+				"summary": "Todos los Productos",
+				"responses": {
+					"200": {
+						"description": "SUCCESS",
+						"headers": {
+							"Vary": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Origin"
+							},
+							"Access-Control-Allow-Credentials": {
+								"schema": {
+									"type": "boolean"
+								},
+								"example": "true"
+							},
+							"Content-Length": {
+								"schema": {
+									"type": "integer"
+								},
+								"example": "596"
+							},
+							"ETag": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "W/\"254-V00N1QT80RtQTRVVqnwH2yoS30s\""
+							},
+							"Date": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Thu, 11 Dec 2025 18:08:06 GMT"
+							},
+							"Connection": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "keep-alive"
+							},
+							"Keep-Alive": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "timeout=5"
+							}
+						}
+					}
+				},
+				"tags": ["Products"],
+				"description": "Obtener todos los productos"
+			}
+		},
+		"/api/products/{id}": {
+			"get": {
+				"summary": "Producto por ID",
+				"responses": {
+					"200": {
+						"description": "SUCCESS",
+						"headers": {
+							"Vary": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Origin"
+							},
+							"Access-Control-Allow-Credentials": {
+								"schema": {
+									"type": "boolean"
+								},
+								"example": "true"
+							},
+							"Content-Length": {
+								"schema": {
+									"type": "integer"
+								},
+								"example": "156"
+							},
+							"ETag": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "W/\"9c-HFNULgOCwf3eZLWVohrISmSMZr4\""
+							},
+							"Date": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Thu, 11 Dec 2025 18:08:39 GMT"
+							},
+							"Connection": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "keep-alive"
+							},
+							"Keep-Alive": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "timeout=5"
+							}
+						}
+					},
+					"404": {
+						"description": "NOT_FOUND",
+						"headers": {
+							"Vary": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Origin"
+							},
+							"Access-Control-Allow-Credentials": {
+								"schema": {
+									"type": "boolean"
+								},
+								"example": "true"
+							},
+							"Content-Length": {
+								"schema": {
+									"type": "integer"
+								},
+								"example": "77"
+							},
+							"ETag": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "W/\"4d-y85CKF4wJ0na9D+6wiU3Ib1gZd4\""
+							},
+							"Date": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Thu, 11 Dec 2025 19:01:32 GMT"
+							},
+							"Connection": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "keep-alive"
+							},
+							"Keep-Alive": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "timeout=5"
+							}
+						}
+					}
+				},
+				"tags": ["Products"],
+				"description": "Obtener producto por ID"
+			},
+			"parameters": [
+				{
+					"name": "id",
+					"in": "path",
+					"required": true,
+					"schema": {
+						"type": "integer"
+					},
+					"example": "6"
+				}
+			],
+			"delete": {
+				"summary": "Eliminar Producto",
+				"responses": {
+					"200": {
+						"description": "SUCCESS",
+						"headers": {
+							"Vary": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Origin"
+							},
+							"Access-Control-Allow-Credentials": {
+								"schema": {
+									"type": "boolean"
+								},
+								"example": "true"
+							},
+							"Content-Length": {
+								"schema": {
+									"type": "integer"
+								},
+								"example": "154"
+							},
+							"ETag": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "W/\"9a-qjMsXLu8wOpWhqG8XFU3DNKC23A\""
+							},
+							"Date": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Thu, 11 Dec 2025 19:02:45 GMT"
+							},
+							"Connection": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "keep-alive"
+							},
+							"Keep-Alive": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "timeout=5"
+							}
+						}
+					},
+					"404": {
+						"description": "NOT_FOUND",
+						"headers": {
+							"Vary": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Origin"
+							},
+							"Access-Control-Allow-Credentials": {
+								"schema": {
+									"type": "boolean"
+								},
+								"example": "true"
+							},
+							"Content-Length": {
+								"schema": {
+									"type": "integer"
+								},
+								"example": "78"
+							},
+							"ETag": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "W/\"4e-mWIDYIz1NTr/fVtray3NE+KjD1c\""
+							},
+							"Date": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Thu, 11 Dec 2025 19:03:19 GMT"
+							},
+							"Connection": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "keep-alive"
+							},
+							"Keep-Alive": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "timeout=5"
+							}
+						}
+					}
+				},
+				"tags": ["Products"],
+				"description": "Eliminar un producto por su ID"
+			}
+		},
+		"/api/products/update": {
+			"patch": {
+				"summary": "Actualizar Producto",
+				"responses": {
+					"200": {
+						"description": "SUCCESS",
+						"headers": {
+							"Vary": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Origin"
+							},
+							"Access-Control-Allow-Credentials": {
+								"schema": {
+									"type": "boolean"
+								},
+								"example": "true"
+							},
+							"Content-Length": {
+								"schema": {
+									"type": "integer"
+								},
+								"example": "154"
+							},
+							"ETag": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "W/\"9a-qjMsXLu8wOpWhqG8XFU3DNKC23A\""
+							},
+							"Date": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Thu, 11 Dec 2025 19:02:19 GMT"
+							},
+							"Connection": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "keep-alive"
+							},
+							"Keep-Alive": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "timeout=5"
+							}
+						}
+					},
+					"400": {
+						"description": "VALIDATION_ERROR",
+						"headers": {
+							"Vary": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Origin"
+							},
+							"Access-Control-Allow-Credentials": {
+								"schema": {
+									"type": "boolean"
+								},
+								"example": "true"
+							},
+							"Content-Length": {
+								"schema": {
+									"type": "integer"
+								},
+								"example": "84"
+							},
+							"ETag": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "W/\"54-H3n/UH9GlS6fEhgDlCxUviRIy5k\""
+							},
+							"Date": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Thu, 11 Dec 2025 19:04:40 GMT"
+							},
+							"Connection": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "keep-alive"
+							},
+							"Keep-Alive": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "timeout=5"
+							}
+						}
+					},
+					"401": {
+						"description": "UNAUTHORIZED",
+						"headers": {
+							"Vary": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Origin"
+							},
+							"Access-Control-Allow-Credentials": {
+								"schema": {
+									"type": "boolean"
+								},
+								"example": "true"
+							},
+							"Content-Length": {
+								"schema": {
+									"type": "integer"
+								},
+								"example": "49"
+							},
+							"ETag": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "W/\"31-745jFqqEU0VFC/rtfxiNcpDpdss\""
+							},
+							"Date": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Thu, 11 Dec 2025 18:21:10 GMT"
+							},
+							"Connection": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "keep-alive"
+							},
+							"Keep-Alive": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "timeout=5"
+							}
+						}
+					},
+					"404": {
+						"description": "NOT_FOUND",
+						"headers": {
+							"Vary": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Origin"
+							},
+							"Access-Control-Allow-Credentials": {
+								"schema": {
+									"type": "boolean"
+								},
+								"example": "true"
+							},
+							"Content-Length": {
+								"schema": {
+									"type": "integer"
+								},
+								"example": "80"
+							},
+							"ETag": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "W/\"50-wXoIzEGeK+I7/FqZOqHDKDjmT3Y\""
+							},
+							"Date": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Thu, 11 Dec 2025 19:05:06 GMT"
+							},
+							"Connection": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "keep-alive"
+							},
+							"Keep-Alive": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "timeout=5"
+							}
+						}
+					}
+				},
+				"tags": ["Products"],
+				"description": "Actualizar un producto.\n\n``` typescript\n{\n    id: number,\n    name?: string,\n    price?: number,\n    categories?: string[]\n}\n\n ```",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "integer"
+									},
+									"price": {
+										"type": "integer"
+									}
+								}
+							},
+							"example": {
+								"id": 1,
+								"price": 800000
+							}
+						}
+					}
+				}
+			}
+		},
+		"/health": {
+			"get": {
+				"summary": "Health Check",
+				"responses": {
+					"200": {
+						"description": "SUCCESS",
+						"headers": {
+							"Vary": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Origin"
+							},
+							"Access-Control-Allow-Credentials": {
+								"schema": {
+									"type": "boolean"
+								},
+								"example": "true"
+							},
+							"Content-Length": {
+								"schema": {
+									"type": "integer"
+								},
+								"example": "67"
+							},
+							"ETag": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "W/\"43-IBLFNH7PXE/ToNV3iG9lhK/Tdvc\""
+							},
+							"Date": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "Thu, 11 Dec 2025 18:03:07 GMT"
+							},
+							"Connection": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "keep-alive"
+							},
+							"Keep-Alive": {
+								"schema": {
+									"type": "string"
+								},
+								"example": "timeout=5"
+							}
+						}
+					}
+				},
+				"tags": ["Other"],
+				"description": "Health check"
+			}
+		}
+	},
+	"components": {
+		"securitySchemes": {
+			"BearerAuth": {
+				"type": "http",
+				"scheme": "bearer"
+			}
+		}
+	},
+	"security": [
+		{
+			"BearerAuth": []
+		}
+	]
+}
