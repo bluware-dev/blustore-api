@@ -44,20 +44,27 @@ const getProductLastId = async () => {
 	}
 };
 
+const sortedProduct = (product) => {
+	const ORDER = ['id', 'name', 'price', 'categories'];
+
+	return ORDER.reduce((obj, key) => {
+		if (key in product) obj[key] = product[key];
+		return obj;
+	}, {});
+};
+
 export async function createProduct(product) {
 	try {
 		const productsCol = collection(db, 'products');
 		const lastId = await getProductLastId();
-		// https://firebase.google.com/docs/reference/js/firestore_.querysnapshot#querysnapshotempty
-		if (lastId.empty) return {};
 
 		// https://firebase.google.com/docs/reference/js/firestore_.querysnapshot#querysnapshotdocs
-		const lastIdValue = lastId.docs[0].data().id;
+		const lastIdValue = lastId.empty ? 0 : lastId.docs[0].data().id;
 		const nextId = Number.isNaN(lastIdValue) ? 1 : lastIdValue + 1;
 
 		await addDoc(productsCol, { id: nextId, ...product });
 
-		return { id: nextId, ...product };
+		return sortedProduct({ id: nextId, ...product });
 	} catch (err) {
 		console.error(
 			'[createProduct] fallo al intentar crear un producto:',
@@ -80,7 +87,7 @@ export async function updateProduct(product) {
 		// https://firebase.google.com/docs/reference/js/firestore_.documentsnapshot.md#documentsnapshotref
 		await updateDoc(productRef.ref, { ...product });
 
-		return product;
+		return sortedProduct({ ...productRef.data(), ...product });
 	} catch (err) {
 		console.error(
 			'[updateProduct] fallo al intentar actualizar un producto:',
@@ -101,7 +108,7 @@ export async function deleteProduct(id) {
 		const productRef = productsSnap.docs[0];
 		await deleteDoc(productRef.ref); // Puede eliminar solo con la referencia
 
-		return productRef.data();
+		return sortedProduct(productRef.data());
 	} catch (err) {
 		console.error(
 			'[deleteProduct] fallo al intentar eliminar un producto:',
@@ -124,7 +131,9 @@ export async function getAllProducts() {
 			products.push(doc.data());
 		});
 
-		return products;
+		return products
+			.map(sortedProduct)
+			.sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
 	} catch (err) {
 		console.error(
 			'[getAllProducts] fallo al obtener todos los productos:',
@@ -145,7 +154,7 @@ export async function getProductById(id) {
 		// https://firebase.google.com/docs/reference/js/firestore_.querysnapshot#querysnapshotdocs
 		const product = productsSnap.docs[0];
 
-		return product.data();
+		return sortedProduct(product.data());
 	} catch (err) {
 		console.error(
 			'[getProductById] fallo al obtener el producto:',
