@@ -48,9 +48,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"exec": [
-									""
-								],
+								"exec": [""],
 								"type": "text/javascript",
 								"packages": {},
 								"requests": {}
@@ -74,14 +72,8 @@
 						},
 						"url": {
 							"raw": "{{baseURL}}/api/auth/login",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"login"
-							]
+							"host": ["{{baseURL}}"],
+							"path": ["api", "auth", "login"]
 						},
 						"description": "Login de usuario hardcodeado para demostración\n\n``` typescript\n{\n    username: string: \"bob\",\n    password: string: \"1234\"\n}\n\n ```"
 					},
@@ -102,11 +94,7 @@
 								},
 								"url": {
 									"raw": "/api/auth/login",
-									"path": [
-										"api",
-										"auth",
-										"login"
-									]
+									"path": ["api", "auth", "login"]
 								}
 							},
 							"status": "OK",
@@ -171,14 +159,8 @@
 								},
 								"url": {
 									"raw": "{{baseURL}}/api/auth/login",
-									"host": [
-										"{{baseURL}}"
-									],
-									"path": [
-										"api",
-										"auth",
-										"login"
-									]
+									"host": ["{{baseURL}}"],
+									"path": ["api", "auth", "login"]
 								}
 							},
 							"status": "Bad Request",
@@ -237,14 +219,8 @@
 								},
 								"url": {
 									"raw": "{{baseURL}}/api/auth/login",
-									"host": [
-										"{{baseURL}}"
-									],
-									"path": [
-										"api",
-										"auth",
-										"login"
-									]
+									"host": ["{{baseURL}}"],
+									"path": ["api", "auth", "login"]
 								}
 							},
 							"status": "Unauthorized",
@@ -359,14 +335,8 @@
 						},
 						"url": {
 							"raw": "{{baseURL}}/api/auth/register",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"register"
-							]
+							"host": ["{{baseURL}}"],
+							"path": ["api", "auth", "register"]
 						},
 						"description": "Registrar un nuevo usuario\n\n``` typescript\n{\n    username: string,\n    password: string\n}\n\n ```"
 					},
@@ -387,11 +357,7 @@
 								},
 								"url": {
 									"raw": "/api/auth/register",
-									"path": [
-										"api",
-										"auth",
-										"register"
-									]
+									"path": ["api", "auth", "register"]
 								}
 							},
 							"status": "OK",
@@ -450,14 +416,8 @@
 								},
 								"url": {
 									"raw": "{{baseURL}}/api/auth/register",
-									"host": [
-										"{{baseURL}}"
-									],
-									"path": [
-										"api",
-										"auth",
-										"register"
-									]
+									"host": ["{{baseURL}}"],
+									"path": ["api", "auth", "register"]
 								}
 							},
 							"status": "Bad Request",
@@ -544,9 +504,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"exec": [
-									""
-								],
+								"exec": [""],
 								"type": "text/javascript",
 								"packages": {},
 								"requests": {}
@@ -570,14 +528,8 @@
 						},
 						"url": {
 							"raw": "{{baseURL}}/api/auth/login",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"login"
-							]
+							"host": ["{{baseURL}}"],
+							"path": ["api", "auth", "login"]
 						},
 						"description": "Iniciar sesión con un usuario existente\n\n``` typescript\n{\n    username: string,\n    password: string\n}\n\n ```"
 					},
@@ -626,9 +578,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"exec": [
-									""
-								],
+								"exec": [""],
 								"type": "text/javascript",
 								"packages": {},
 								"requests": {}
@@ -649,14 +599,8 @@
 						},
 						"url": {
 							"raw": "{{baseURL}}/api/products/create",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"products",
-								"create"
-							]
+							"host": ["{{baseURL}}"],
+							"path": ["api", "products", "create"]
 						},
 						"description": "Crear un nuevo producto.\n\n``` typescript\n{\n    name: string,\n    price: number,\n    categories: string[]\n}\n\n ```"
 					},
@@ -677,11 +621,7 @@
 								},
 								"url": {
 									"raw": "/api/products/create",
-									"path": [
-										"api",
-										"products",
-										"create"
-									]
+									"path": ["api", "products", "create"]
 								}
 							},
 							"status": "OK",
@@ -754,15 +694,9 @@
 								"url": {
 									"raw": "http://localhost:3000/api/products/create",
 									"protocol": "http",
-									"host": [
-										"localhost"
-									],
+									"host": ["localhost"],
 									"port": "3000",
-									"path": [
-										"api",
-										"products",
-										"create"
-									]
+									"path": ["api", "products", "create"]
 								}
 							},
 							"status": "Unauthorized",
@@ -821,14 +755,8 @@
 								},
 								"url": {
 									"raw": "{{baseURL}}/api/products/create",
-									"host": [
-										"{{baseURL}}"
-									],
-									"path": [
-										"api",
-										"products",
-										"create"
-									]
+									"host": ["{{baseURL}}"],
+									"path": ["api", "products", "create"]
 								}
 							},
 							"status": "Bad Request",
@@ -924,13 +852,8 @@
 						],
 						"url": {
 							"raw": "{{baseURL}}/api/products",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"products"
-							]
+							"host": ["{{baseURL}}"],
+							"path": ["api", "products"]
 						},
 						"description": "Obtener todos los productos"
 					},
@@ -942,10 +865,7 @@
 								"header": [],
 								"url": {
 									"raw": "/api/products",
-									"path": [
-										"api",
-										"products"
-									]
+									"path": ["api", "products"]
 								}
 							},
 							"status": "OK",
@@ -1037,14 +957,8 @@
 						],
 						"url": {
 							"raw": "{{baseURL}}/api/products/:id",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"products",
-								":id"
-							],
+							"host": ["{{baseURL}}"],
+							"path": ["api", "products", ":id"],
 							"variable": [
 								{
 									"key": "id",
@@ -1062,11 +976,7 @@
 								"header": [],
 								"url": {
 									"raw": "/api/products/:id",
-									"path": [
-										"api",
-										"products",
-										":id"
-									],
+									"path": ["api", "products", ":id"],
 									"variable": [
 										{
 											"key": "id",
@@ -1127,14 +1037,8 @@
 								],
 								"url": {
 									"raw": "{{baseURL}}/api/products/:id",
-									"host": [
-										"{{baseURL}}"
-									],
-									"path": [
-										"api",
-										"products",
-										":id"
-									],
+									"host": ["{{baseURL}}"],
+									"path": ["api", "products", ":id"],
 									"variable": [
 										{
 											"key": "id",
@@ -1249,14 +1153,8 @@
 						},
 						"url": {
 							"raw": "{{baseURL}}/api/products/update",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"products",
-								"update"
-							]
+							"host": ["{{baseURL}}"],
+							"path": ["api", "products", "update"]
 						},
 						"description": "Actualizar un producto.\n\n``` typescript\n{\n    id: number,\n    name?: string,\n    price?: number,\n    categories?: string[]\n}\n\n ```"
 					},
@@ -1287,11 +1185,7 @@
 								},
 								"url": {
 									"raw": "/api/products/update",
-									"path": [
-										"api",
-										"products",
-										"update"
-									]
+									"path": ["api", "products", "update"]
 								}
 							},
 							"status": "OK",
@@ -1360,14 +1254,8 @@
 								},
 								"url": {
 									"raw": "{{baseURL}}/api/products/update",
-									"host": [
-										"{{baseURL}}"
-									],
-									"path": [
-										"api",
-										"products",
-										"update"
-									]
+									"host": ["{{baseURL}}"],
+									"path": ["api", "products", "update"]
 								}
 							},
 							"status": "Not Found",
@@ -1426,11 +1314,7 @@
 								},
 								"url": {
 									"raw": "/api/products/update",
-									"path": [
-										"api",
-										"products",
-										"update"
-									]
+									"path": ["api", "products", "update"]
 								}
 							},
 							"status": "Unauthorized",
@@ -1499,14 +1383,8 @@
 								},
 								"url": {
 									"raw": "{{baseURL}}/api/products/update",
-									"host": [
-										"{{baseURL}}"
-									],
-									"path": [
-										"api",
-										"products",
-										"update"
-									]
+									"host": ["{{baseURL}}"],
+									"path": ["api", "products", "update"]
 								}
 							},
 							"status": "Bad Request",
@@ -1582,14 +1460,8 @@
 						],
 						"url": {
 							"raw": "{{baseURL}}/api/products/:id",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"products",
-								":id"
-							],
+							"host": ["{{baseURL}}"],
+							"path": ["api", "products", ":id"],
 							"variable": [
 								{
 									"key": "id",
@@ -1612,11 +1484,7 @@
 								],
 								"url": {
 									"raw": "/api/products/:id",
-									"path": [
-										"api",
-										"products",
-										":id"
-									],
+									"path": ["api", "products", ":id"],
 									"variable": [
 										{
 											"key": "id",
@@ -1677,14 +1545,8 @@
 								],
 								"url": {
 									"raw": "{{baseURL}}/api/products/:id",
-									"host": [
-										"{{baseURL}}"
-									],
-									"path": [
-										"api",
-										"products",
-										":id"
-									],
+									"host": ["{{baseURL}}"],
+									"path": ["api", "products", ":id"],
 									"variable": [
 										{
 											"key": "id",
@@ -1774,12 +1636,8 @@
 						],
 						"url": {
 							"raw": "{{baseURL}}/health",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"health"
-							]
+							"host": ["{{baseURL}}"],
+							"path": ["health"]
 						},
 						"description": "Health check"
 					},
@@ -1791,9 +1649,7 @@
 								"header": [],
 								"url": {
 									"raw": "/health",
-									"path": [
-										"health"
-									]
+									"path": ["health"]
 								}
 							},
 							"status": "OK",
@@ -1859,9 +1715,7 @@
 				"type": "text/javascript",
 				"packages": {},
 				"requests": {},
-				"exec": [
-					""
-				]
+				"exec": [""]
 			}
 		},
 		{
@@ -1870,9 +1724,7 @@
 				"type": "text/javascript",
 				"packages": {},
 				"requests": {},
-				"exec": [
-					""
-				]
+				"exec": [""]
 			}
 		}
 	],

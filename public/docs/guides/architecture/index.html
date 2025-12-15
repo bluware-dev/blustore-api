@@ -1,258 +1,3551 @@
-<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-mjs56nzy"> <head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Arquitectura | BluStore API</title><link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v5.16.3"/><meta name="generator" content="Starlight v0.37.0"/><meta property="og:title" content="Arquitectura"/><meta property="og:type" content="article"/><meta property="og:locale" content="en"/><meta property="og:description" content="Decisiones de arquitectura, diseño y separación de responsabilidades."/><meta property="og:site_name" content="BluStore API"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="Decisiones de arquitectura, diseño y separación de responsabilidades."/><script>
-	window.StarlightThemeProvider = (() => {
-		const storedTheme =
-			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
-		const theme =
-			storedTheme ||
-			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
-		return {
-			updatePickers(theme = storedTheme || 'auto') {
-				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
-					const select = picker.querySelector('select');
-					if (select) select.value = theme;
-					/** @type {HTMLTemplateElement | null} */
-					const tmpl = document.querySelector(`#theme-icons`);
-					const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
-					if (newIcon) {
-						const oldIcon = picker.querySelector('svg.label-icon');
-						if (oldIcon) {
-							oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+<!doctype html>
+<html
+	lang="en"
+	dir="ltr"
+	data-theme="dark"
+	data-has-toc
+	data-has-sidebar
+	class="astro-mjs56nzy"
+>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Arquitectura | BluStore API</title>
+		<link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml" />
+		<meta name="generator" content="Astro v5.16.3" />
+		<meta name="generator" content="Starlight v0.37.0" />
+		<meta property="og:title" content="Arquitectura" />
+		<meta property="og:type" content="article" />
+		<meta property="og:locale" content="en" />
+		<meta
+			property="og:description"
+			content="Decisiones de arquitectura, diseño y separación de responsabilidades."
+		/>
+		<meta property="og:site_name" content="BluStore API" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta
+			name="description"
+			content="Decisiones de arquitectura, diseño y separación de responsabilidades."
+		/>
+		<script>
+			window.StarlightThemeProvider = (() => {
+				const storedTheme =
+					typeof localStorage !== 'undefined' &&
+					localStorage.getItem('starlight-theme');
+				const theme =
+					storedTheme ||
+					(window.matchMedia('(prefers-color-scheme: light)').matches
+						? 'light'
+						: 'dark');
+				document.documentElement.dataset.theme =
+					theme === 'light' ? 'light' : 'dark';
+				return {
+					updatePickers(theme = storedTheme || 'auto') {
+						document
+							.querySelectorAll('starlight-theme-select')
+							.forEach((picker) => {
+								const select = picker.querySelector('select');
+								if (select) select.value = theme;
+								/** @type {HTMLTemplateElement | null} */
+								const tmpl =
+									document.querySelector(`#theme-icons`);
+								const newIcon =
+									tmpl &&
+									tmpl.content.querySelector('.' + theme);
+								if (newIcon) {
+									const oldIcon =
+										picker.querySelector('svg.label-icon');
+									if (oldIcon) {
+										oldIcon.replaceChildren(
+											...newIcon.cloneNode(true)
+												.childNodes
+										);
+									}
+								}
+							});
+					},
+				};
+			})();
+		</script>
+		<template id="theme-icons"
+			><svg
+				aria-hidden="true"
+				class="light astro-zyiyrzho"
+				width="16"
+				height="16"
+				viewBox="0 0 24 24"
+				fill="currentColor"
+				style="--sl-icon-size: 1em"
+			>
+				<path
+					d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"
+				/></svg
+			><svg
+				aria-hidden="true"
+				class="dark astro-zyiyrzho"
+				width="16"
+				height="16"
+				viewBox="0 0 24 24"
+				fill="currentColor"
+				style="--sl-icon-size: 1em"
+			>
+				<path
+					d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"
+				/></svg
+			><svg
+				aria-hidden="true"
+				class="auto astro-zyiyrzho"
+				width="16"
+				height="16"
+				viewBox="0 0 24 24"
+				fill="currentColor"
+				style="--sl-icon-size: 1em"
+			>
+				<path
+					d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"
+				/></svg
+		></template>
+		<link
+			rel="stylesheet"
+			href="/_astro/print.DNXP8c50.css"
+			media="print"
+		/>
+		<link rel="stylesheet" href="/_astro/Route.Bel3ExX0.css" />
+		<style>
+			@layer starlight.components {
+				:root {
+					--sl-badge-default-border: var(--sl-color-accent);
+					--sl-badge-default-bg: var(--sl-color-accent-low);
+					--sl-badge-default-text: #fff;
+					--sl-badge-note-border: var(--sl-color-blue);
+					--sl-badge-note-bg: var(--sl-color-blue-low);
+					--sl-badge-note-text: #fff;
+					--sl-badge-danger-border: var(--sl-color-red);
+					--sl-badge-danger-bg: var(--sl-color-red-low);
+					--sl-badge-danger-text: #fff;
+					--sl-badge-success-border: var(--sl-color-green);
+					--sl-badge-success-bg: var(--sl-color-green-low);
+					--sl-badge-success-text: #fff;
+					--sl-badge-caution-border: var(--sl-color-orange);
+					--sl-badge-caution-bg: var(--sl-color-orange-low);
+					--sl-badge-caution-text: #fff;
+					--sl-badge-tip-border: var(--sl-color-purple);
+					--sl-badge-tip-bg: var(--sl-color-purple-low);
+					--sl-badge-tip-text: #fff;
+				}
+				[data-theme='light']:root {
+					--sl-badge-default-bg: var(--sl-color-accent-high);
+					--sl-badge-note-bg: var(--sl-color-blue-high);
+					--sl-badge-danger-bg: var(--sl-color-red-high);
+					--sl-badge-success-bg: var(--sl-color-green-high);
+					--sl-badge-caution-bg: var(--sl-color-orange-high);
+					--sl-badge-tip-bg: var(--sl-color-purple-high);
+				}
+				.sl-badge:where(.astro-n3ngiwm6) {
+					display: inline-block;
+					border: 1px solid var(--sl-color-border-badge);
+					border-radius: 0.25rem;
+					font-family: var(--sl-font-system-mono);
+					line-height: normal;
+					color: var(--sl-color-text-badge);
+					background-color: var(--sl-color-bg-badge);
+					overflow-wrap: anywhere;
+				}
+				.sidebar-content .sl-badge:where(.astro-n3ngiwm6) {
+					line-height: 1;
+					font-size: var(--sl-text-xs);
+					padding: 0.125rem 0.375rem;
+				}
+				.sidebar-content
+					a[aria-current='page']
+					> .sl-badge:where(.astro-n3ngiwm6) {
+					--sl-color-bg-badge: transparent;
+					--sl-color-border-badge: currentColor;
+					color: inherit;
+				}
+				.default:where(.astro-n3ngiwm6) {
+					--sl-color-bg-badge: var(--sl-badge-default-bg);
+					--sl-color-border-badge: var(--sl-badge-default-border);
+					--sl-color-text-badge: var(--sl-badge-default-text);
+				}
+				.note:where(.astro-n3ngiwm6) {
+					--sl-color-bg-badge: var(--sl-badge-note-bg);
+					--sl-color-border-badge: var(--sl-badge-note-border);
+					--sl-color-text-badge: var(--sl-badge-note-text);
+				}
+				.danger:where(.astro-n3ngiwm6) {
+					--sl-color-bg-badge: var(--sl-badge-danger-bg);
+					--sl-color-border-badge: var(--sl-badge-danger-border);
+					--sl-color-text-badge: var(--sl-badge-danger-text);
+				}
+				.success:where(.astro-n3ngiwm6) {
+					--sl-color-bg-badge: var(--sl-badge-success-bg);
+					--sl-color-border-badge: var(--sl-badge-success-border);
+					--sl-color-text-badge: var(--sl-badge-success-text);
+				}
+				.tip:where(.astro-n3ngiwm6) {
+					--sl-color-bg-badge: var(--sl-badge-tip-bg);
+					--sl-color-border-badge: var(--sl-badge-tip-border);
+					--sl-color-text-badge: var(--sl-badge-tip-text);
+				}
+				.caution:where(.astro-n3ngiwm6) {
+					--sl-color-bg-badge: var(--sl-badge-caution-bg);
+					--sl-color-border-badge: var(--sl-badge-caution-border);
+					--sl-color-text-badge: var(--sl-badge-caution-text);
+				}
+				.small:where(.astro-n3ngiwm6) {
+					font-size: var(--sl-text-xs);
+					padding: 0.125rem 0.25rem;
+				}
+				.medium:where(.astro-n3ngiwm6) {
+					font-size: var(--sl-text-sm);
+					padding: 0.175rem 0.35rem;
+				}
+				.large:where(.astro-n3ngiwm6) {
+					font-size: var(--sl-text-base);
+					padding: 0.225rem 0.45rem;
+				}
+				.sl-markdown-content
+					:is(h1, h2, h3, h4, h5, h6)
+					.sl-badge:where(.astro-n3ngiwm6) {
+					vertical-align: middle;
+				}
+			}
+			@layer starlight.components {
+				.card-grid:where(.astro-6guidrt7) {
+					display: grid;
+					grid-template-columns: 100%;
+					gap: 1rem;
+				}
+				.card-grid:where(.astro-6guidrt7) > * {
+					margin-top: 0 !important;
+				}
+				@media (min-width: 50rem) {
+					.card-grid:where(.astro-6guidrt7) {
+						grid-template-columns: 1fr 1fr;
+						gap: 1.5rem;
+					}
+					.stagger:where(.astro-6guidrt7) {
+						--stagger-height: 5rem;
+						padding-bottom: var(--stagger-height);
+					}
+					.stagger:where(.astro-6guidrt7) > *:nth-child(2n) {
+						transform: translateY(var(--stagger-height));
+					}
+				}
+			}
+			@layer starlight.components {
+				.card:where(.astro-fobaosbn) {
+					--sl-card-border: var(--sl-color-purple);
+					--sl-card-bg: var(--sl-color-purple-low);
+					border: 1px solid var(--sl-color-gray-5);
+					background-color: var(--sl-color-black);
+					padding: clamp(1rem, calc(0.125rem + 3vw), 2.5rem);
+					flex-direction: column;
+					gap: clamp(0.5rem, calc(0.125rem + 1vw), 1rem);
+				}
+				.card:where(.astro-fobaosbn):nth-child(4n + 1) {
+					--sl-card-border: var(--sl-color-orange);
+					--sl-card-bg: var(--sl-color-orange-low);
+				}
+				.card:where(.astro-fobaosbn):nth-child(4n + 3) {
+					--sl-card-border: var(--sl-color-green);
+					--sl-card-bg: var(--sl-color-green-low);
+				}
+				.card:where(.astro-fobaosbn):nth-child(4n + 4) {
+					--sl-card-border: var(--sl-color-red);
+					--sl-card-bg: var(--sl-color-red-low);
+				}
+				.card:where(.astro-fobaosbn):nth-child(4n + 5) {
+					--sl-card-border: var(--sl-color-blue);
+					--sl-card-bg: var(--sl-color-blue-low);
+				}
+				.title:where(.astro-fobaosbn) {
+					font-weight: 600;
+					font-size: var(--sl-text-h4);
+					color: var(--sl-color-white);
+					line-height: var(--sl-line-height-headings);
+					gap: 1rem;
+					align-items: center;
+				}
+				.card:where(.astro-fobaosbn) .icon:where(.astro-fobaosbn) {
+					border: 1px solid var(--sl-card-border);
+					background-color: var(--sl-card-bg);
+					padding: 0.2em;
+					border-radius: 0.25rem;
+					flex-shrink: 0;
+				}
+				.card:where(.astro-fobaosbn) .body:where(.astro-fobaosbn) {
+					margin: 0;
+					font-size: clamp(
+						var(--sl-text-sm),
+						calc(0.5rem + 1vw),
+						var(--sl-text-body)
+					);
+				}
+			}
+			@layer starlight.components {
+				svg:where(.astro-zyiyrzho) {
+					color: var(--sl-icon-color);
+					font-size: var(--sl-icon-size, 1em);
+					width: 1em;
+					height: 1em;
+				}
+			}
+			@layer starlight.components {
+				starlight-tabs:where(.astro-tyh3unqs) {
+					display: block;
+				}
+				.tablist-wrapper:where(.astro-tyh3unqs) {
+					overflow-x: auto;
+				}
+				:where(.astro-tyh3unqs)[role='tablist'] {
+					display: flex;
+					list-style: none;
+					border-bottom: 2px solid var(--sl-color-gray-5);
+					padding: 0;
+				}
+				.tab:where(.astro-tyh3unqs) {
+					display: flex;
+				}
+				.tab:where(.astro-tyh3unqs)
+					> :where(.astro-tyh3unqs)[role='tab'] {
+					--sl-tab-color-border: var(--sl-color-gray-5);
+					display: flex;
+					align-items: center;
+					gap: 0.5rem;
+					line-height: var(--sl-line-height-headings);
+					padding: 0.275rem 1.25rem;
+					text-decoration: none;
+					box-shadow: 0 2px 0 var(--sl-tab-color-border);
+					color: var(--sl-color-gray-3);
+					outline-offset: var(--sl-outline-offset-inside);
+					overflow-wrap: initial;
+				}
+				.tab:where(.astro-tyh3unqs)
+					:where(.astro-tyh3unqs)[role='tab'][aria-selected='true'] {
+					--sl-tab-color-border: var(--sl-color-text-accent);
+					color: var(--sl-color-white);
+					font-weight: 600;
+				}
+				.tablist-wrapper:where(.astro-tyh3unqs) ~ [role='tabpanel'] {
+					margin-top: 1rem;
+				}
+			}
+			@layer starlight.components {
+				.sl-steps {
+					--bullet-size: calc(var(--sl-line-height) * 1rem);
+					--bullet-margin: 0.375rem;
+					list-style: none;
+					counter-reset: steps-counter var(--sl-steps-start, 0);
+					padding-inline-start: 0;
+				}
+				.sl-steps > li {
+					counter-increment: steps-counter;
+					position: relative;
+					padding-inline-start: calc(var(--bullet-size) + 1rem);
+					padding-bottom: 1px;
+					min-height: calc(var(--bullet-size) + var(--bullet-margin));
+				}
+				.sl-steps > li + li {
+					margin-top: 0;
+				}
+				.sl-steps > li:before {
+					content: counter(steps-counter);
+					position: absolute;
+					top: 0;
+					inset-inline-start: 0;
+					width: var(--bullet-size);
+					height: var(--bullet-size);
+					line-height: var(--bullet-size);
+					font-size: var(--sl-text-xs);
+					font-weight: 600;
+					text-align: center;
+					color: var(--sl-color-white);
+					background-color: var(--sl-color-gray-6);
+					border-radius: 99rem;
+					box-shadow: inset 0 0 0 1px var(--sl-color-gray-5);
+				}
+				.sl-steps > li:after {
+					--guide-width: 1px;
+					content: '';
+					position: absolute;
+					top: calc(var(--bullet-size) + var(--bullet-margin));
+					bottom: var(--bullet-margin);
+					inset-inline-start: calc(
+						(var(--bullet-size) - var(--guide-width)) / 2
+					);
+					width: var(--guide-width);
+					background-color: var(--sl-color-hairline-light);
+				}
+			}
+			@layer starlight.content {
+				.sl-steps > li > :first-child {
+					--lh: calc(1em * var(--sl-line-height));
+					--shift-y: calc(0.5 * (var(--bullet-size) - var(--lh)));
+					transform: translateY(var(--shift-y));
+					margin-bottom: var(--shift-y);
+				}
+				.sl-steps > li > :first-child:where(h1, h2, h3, h4, h5, h6) {
+					--lh: calc(1em * var(--sl-line-height-headings));
+				}
+				@supports (--prop: 1lh) {
+					.sl-steps > li > :first-child {
+						--lh: 1lh;
+					}
+				}
+			}
+			@layer starlight.components {
+				.sl-link-button:where(.astro-ijkaixh6) {
+					align-items: center;
+					border: 1px solid transparent;
+					border-radius: 999rem;
+					display: inline-flex;
+					font-size: var(--sl-text-sm);
+					gap: 0.5em;
+					line-height: 1.1875;
+					outline-offset: 0.25rem;
+					padding: 0.4375rem 1.125rem;
+					text-decoration: none;
+				}
+				.sl-link-button:where(.astro-ijkaixh6).primary {
+					background: var(--sl-color-text-accent);
+					border-color: var(--sl-color-text-accent);
+					color: var(--sl-color-black);
+				}
+				.sl-link-button:where(.astro-ijkaixh6).primary:hover {
+					color: var(--sl-color-black);
+				}
+				.sl-link-button:where(.astro-ijkaixh6).secondary {
+					border-color: inherit;
+					color: var(--sl-color-white);
+				}
+				.sl-link-button:where(.astro-ijkaixh6).minimal {
+					color: var(--sl-color-white);
+					padding-inline: 0;
+				}
+				.sl-link-button:where(.astro-ijkaixh6) svg {
+					flex-shrink: 0;
+				}
+				@media (min-width: 50rem) {
+					.sl-link-button:where(.astro-ijkaixh6) {
+						font-size: var(--sl-text-base);
+						padding: 0.9375rem 1.25rem;
+					}
+				}
+				.sl-markdown-content .sl-link-button:where(.astro-ijkaixh6) {
+					margin-inline-end: 1rem;
+				}
+				.sl-markdown-content
+					.sl-link-button:where(.astro-ijkaixh6):not(:where(p *)) {
+					margin-block: 1rem;
+				}
+			}
+		</style>
+		<script type="module" src="/_astro/page.B1D-nYk3.js"></script>
+	</head>
+	<body class="astro-mjs56nzy">
+		<a href="#_top" class="astro-qybxun7s">Skip to content</a>
+		<div class="page sl-flex astro-px3dtb7d">
+			<header class="header astro-px3dtb7d">
+				<div class="header astro-p3kfdba6">
+					<div class="title-wrapper sl-flex astro-p3kfdba6">
+						<a href="/" class="site-title sl-flex astro-cifckgzf">
+							<span class="astro-cifckgzf" translate="no">
+								BluStore API
+							</span>
+						</a>
+					</div>
+					<div class="sl-flex print:hidden astro-p3kfdba6">
+						<site-search
+							class="astro-p3kfdba6 astro-25lfi4pb"
+							data-translations="{&#34;placeholder&#34;:&#34;Search&#34;}"
+						>
+							<button
+								data-open-modal
+								disabled
+								aria-label="Search"
+								aria-keyshortcuts="Control+K"
+								class="astro-25lfi4pb"
+							>
+								<svg
+									aria-hidden="true"
+									class="astro-25lfi4pb astro-zyiyrzho"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="currentColor"
+									style="--sl-icon-size: 1em"
+								>
+									<path
+										d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"
+									/>
+								</svg>
+								<span
+									class="sl-hidden md:sl-block astro-25lfi4pb"
+									aria-hidden="true"
+									>Search</span
+								>
+								<kbd
+									class="sl-hidden md:sl-flex astro-25lfi4pb"
+									style="display: none"
+								>
+									<kbd class="astro-25lfi4pb">Ctrl</kbd
+									><kbd class="astro-25lfi4pb">K</kbd>
+								</kbd>
+							</button>
+							<dialog
+								style="padding: 0"
+								aria-label="Search"
+								class="astro-25lfi4pb"
+							>
+								<div
+									class="dialog-frame sl-flex astro-25lfi4pb"
+								>
+									<button
+										data-close-modal
+										class="sl-flex md:sl-hidden astro-25lfi4pb"
+									>
+										Cancel
+									</button>
+									<div
+										class="search-container astro-25lfi4pb"
+									>
+										<div
+											id="starlight__search"
+											class="astro-25lfi4pb"
+										></div>
+									</div>
+								</div>
+							</dialog>
+						</site-search>
+						<script>
+							(() => {
+								const openBtn = document.querySelector(
+									'button[data-open-modal]'
+								);
+								const shortcut = openBtn?.querySelector('kbd');
+								if (
+									!openBtn ||
+									!(shortcut instanceof HTMLElement)
+								)
+									return;
+								const platformKey =
+									shortcut.querySelector('kbd');
+								if (
+									platformKey &&
+									/(Mac|iPhone|iPod|iPad)/i.test(
+										navigator.platform
+									)
+								) {
+									platformKey.textContent = '⌘';
+									openBtn.setAttribute(
+										'aria-keyshortcuts',
+										'Meta+K'
+									);
+								}
+								shortcut.style.display = '';
+							})();
+						</script>
+						<script
+							type="module"
+							src="/_astro/Search.astro_astro_type_script_index_0_lang.cjYDvRdi.js"
+						></script>
+					</div>
+					<div
+						class="sl-hidden md:sl-flex print:hidden right-group astro-p3kfdba6"
+					>
+						<div class="sl-flex social-icons astro-p3kfdba6">
+							<a
+								href="https://github.com/bluware-dev/blustore-api"
+								rel="me"
+								class="sl-flex astro-zi2ydsol"
+								><span class="sr-only astro-zi2ydsol"
+									>GitHub</span
+								><svg
+									aria-hidden="true"
+									class="astro-zi2ydsol astro-zyiyrzho"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="currentColor"
+									style="--sl-icon-size: 1em"
+								>
+									<path
+										d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"
+									/></svg
+							></a>
+						</div>
+						<starlight-theme-select>
+							<label
+								style="--sl-select-width: 6.25em"
+								class="astro-jqyeacje"
+							>
+								<span class="sr-only astro-jqyeacje"
+									>Select theme</span
+								>
+								<svg
+									aria-hidden="true"
+									class="icon label-icon astro-jqyeacje astro-zyiyrzho"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="currentColor"
+									style="--sl-icon-size: 1em"
+								>
+									<path
+										d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"
+									/>
+								</svg>
+								<select
+									autocomplete="off"
+									class="astro-jqyeacje"
+								>
+									<option value="dark" class="astro-jqyeacje">
+										Dark
+									</option>
+									<option
+										value="light"
+										class="astro-jqyeacje"
+									>
+										Light
+									</option>
+									<option
+										value="auto"
+										selected
+										class="astro-jqyeacje"
+									>
+										Auto
+									</option>
+								</select>
+								<svg
+									aria-hidden="true"
+									class="icon caret astro-jqyeacje astro-zyiyrzho"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="currentColor"
+									style="--sl-icon-size: 1em"
+								>
+									<path
+										d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"
+									/>
+								</svg>
+							</label>
+						</starlight-theme-select>
+						<script>
+							StarlightThemeProvider.updatePickers();
+						</script>
+						<script type="module">
+							const r = 'starlight-theme',
+								o = (e) =>
+									e === 'auto' ||
+									e === 'dark' ||
+									e === 'light'
+										? e
+										: 'auto',
+								c = () =>
+									o(
+										typeof localStorage < 'u' &&
+											localStorage.getItem(r)
+									);
+							function n(e) {
+								typeof localStorage < 'u' &&
+									localStorage.setItem(
+										r,
+										e === 'light' || e === 'dark' ? e : ''
+									);
+							}
+							const l = () =>
+								matchMedia('(prefers-color-scheme: light)')
+									.matches
+									? 'light'
+									: 'dark';
+							function t(e) {
+								(StarlightThemeProvider.updatePickers(e),
+									(document.documentElement.dataset.theme =
+										e === 'auto' ? l() : e),
+									n(e));
+							}
+							matchMedia(
+								'(prefers-color-scheme: light)'
+							).addEventListener('change', () => {
+								c() === 'auto' && t('auto');
+							});
+							class s extends HTMLElement {
+								constructor() {
+									(super(),
+										t(c()),
+										this.querySelector(
+											'select'
+										)?.addEventListener('change', (a) => {
+											a.currentTarget instanceof
+												HTMLSelectElement &&
+												t(o(a.currentTarget.value));
+										}));
+								}
+							}
+							customElements.define('starlight-theme-select', s);
+						</script>
+						<script type="module">
+							class s extends HTMLElement {
+								constructor() {
+									super();
+									const e = this.querySelector('select');
+									e &&
+										(e.addEventListener('change', (t) => {
+											t.currentTarget instanceof
+												HTMLSelectElement &&
+												(window.location.pathname =
+													t.currentTarget.value);
+										}),
+										window.addEventListener(
+											'pageshow',
+											(t) => {
+												if (!t.persisted) return;
+												const n =
+													e.querySelector(
+														'option[selected]'
+													)?.index;
+												n !== e.selectedIndex &&
+													(e.selectedIndex = n ?? 0);
+											}
+										));
+								}
+							}
+							customElements.define('starlight-lang-select', s);
+						</script>
+					</div>
+				</div>
+			</header>
+			<nav class="sidebar print:hidden astro-px3dtb7d" aria-label="Main">
+				<starlight-menu-button class="print:hidden astro-jlnvgg3i">
+					<button
+						aria-expanded="false"
+						aria-label="Menu"
+						aria-controls="starlight__sidebar"
+						class="sl-flex md:sl-hidden astro-jlnvgg3i"
+					>
+						<svg
+							aria-hidden="true"
+							class="open-menu astro-jlnvgg3i astro-zyiyrzho"
+							width="16"
+							height="16"
+							viewBox="0 0 24 24"
+							fill="currentColor"
+							style="--sl-icon-size: 1em"
+						>
+							<path
+								d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"
+							/>
+						</svg>
+						<svg
+							aria-hidden="true"
+							class="close-menu astro-jlnvgg3i astro-zyiyrzho"
+							width="16"
+							height="16"
+							viewBox="0 0 24 24"
+							fill="currentColor"
+							style="--sl-icon-size: 1em"
+						>
+							<path
+								d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"
+							/>
+						</svg>
+					</button>
+				</starlight-menu-button>
+				<script type="module">
+					class s extends HTMLElement {
+						constructor() {
+							(super(),
+								(this.btn = this.querySelector('button')),
+								this.btn.addEventListener('click', () =>
+									this.toggleExpanded()
+								));
+							const t = this.closest('nav');
+							t &&
+								t.addEventListener('keyup', (e) =>
+									this.closeOnEscape(e)
+								);
+						}
+						setExpanded(t) {
+							(this.setAttribute('aria-expanded', String(t)),
+								document.body.toggleAttribute(
+									'data-mobile-menu-expanded',
+									t
+								));
+						}
+						toggleExpanded() {
+							this.setExpanded(
+								this.getAttribute('aria-expanded') !== 'true'
+							);
+						}
+						closeOnEscape(t) {
+							t.code === 'Escape' &&
+								(this.setExpanded(!1), this.btn.focus());
 						}
 					}
-				});
-			},
-		};
-	})();
-</script><template id="theme-icons"><svg aria-hidden="true" class="light astro-zyiyrzho" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg aria-hidden="true" class="dark astro-zyiyrzho" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg aria-hidden="true" class="auto astro-zyiyrzho" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></template><link rel="stylesheet" href="/_astro/print.DNXP8c50.css" media="print"><link rel="stylesheet" href="/_astro/Route.Bel3ExX0.css">
-<style>@layer starlight.components{:root{--sl-badge-default-border: var(--sl-color-accent);--sl-badge-default-bg: var(--sl-color-accent-low);--sl-badge-default-text: #fff;--sl-badge-note-border: var(--sl-color-blue);--sl-badge-note-bg: var(--sl-color-blue-low);--sl-badge-note-text: #fff;--sl-badge-danger-border: var(--sl-color-red);--sl-badge-danger-bg: var(--sl-color-red-low);--sl-badge-danger-text: #fff;--sl-badge-success-border: var(--sl-color-green);--sl-badge-success-bg: var(--sl-color-green-low);--sl-badge-success-text: #fff;--sl-badge-caution-border: var(--sl-color-orange);--sl-badge-caution-bg: var(--sl-color-orange-low);--sl-badge-caution-text: #fff;--sl-badge-tip-border: var(--sl-color-purple);--sl-badge-tip-bg: var(--sl-color-purple-low);--sl-badge-tip-text: #fff}[data-theme=light]:root{--sl-badge-default-bg: var(--sl-color-accent-high);--sl-badge-note-bg: var(--sl-color-blue-high);--sl-badge-danger-bg: var(--sl-color-red-high);--sl-badge-success-bg: var(--sl-color-green-high);--sl-badge-caution-bg: var(--sl-color-orange-high);--sl-badge-tip-bg: var(--sl-color-purple-high)}.sl-badge:where(.astro-n3ngiwm6){display:inline-block;border:1px solid var(--sl-color-border-badge);border-radius:.25rem;font-family:var(--sl-font-system-mono);line-height:normal;color:var(--sl-color-text-badge);background-color:var(--sl-color-bg-badge);overflow-wrap:anywhere}.sidebar-content .sl-badge:where(.astro-n3ngiwm6){line-height:1;font-size:var(--sl-text-xs);padding:.125rem .375rem}.sidebar-content a[aria-current=page]>.sl-badge:where(.astro-n3ngiwm6){--sl-color-bg-badge: transparent;--sl-color-border-badge: currentColor;color:inherit}.default:where(.astro-n3ngiwm6){--sl-color-bg-badge: var(--sl-badge-default-bg);--sl-color-border-badge: var(--sl-badge-default-border);--sl-color-text-badge: var(--sl-badge-default-text)}.note:where(.astro-n3ngiwm6){--sl-color-bg-badge: var(--sl-badge-note-bg);--sl-color-border-badge: var(--sl-badge-note-border);--sl-color-text-badge: var(--sl-badge-note-text)}.danger:where(.astro-n3ngiwm6){--sl-color-bg-badge: var(--sl-badge-danger-bg);--sl-color-border-badge: var(--sl-badge-danger-border);--sl-color-text-badge: var(--sl-badge-danger-text)}.success:where(.astro-n3ngiwm6){--sl-color-bg-badge: var(--sl-badge-success-bg);--sl-color-border-badge: var(--sl-badge-success-border);--sl-color-text-badge: var(--sl-badge-success-text)}.tip:where(.astro-n3ngiwm6){--sl-color-bg-badge: var(--sl-badge-tip-bg);--sl-color-border-badge: var(--sl-badge-tip-border);--sl-color-text-badge: var(--sl-badge-tip-text)}.caution:where(.astro-n3ngiwm6){--sl-color-bg-badge: var(--sl-badge-caution-bg);--sl-color-border-badge: var(--sl-badge-caution-border);--sl-color-text-badge: var(--sl-badge-caution-text)}.small:where(.astro-n3ngiwm6){font-size:var(--sl-text-xs);padding:.125rem .25rem}.medium:where(.astro-n3ngiwm6){font-size:var(--sl-text-sm);padding:.175rem .35rem}.large:where(.astro-n3ngiwm6){font-size:var(--sl-text-base);padding:.225rem .45rem}.sl-markdown-content :is(h1,h2,h3,h4,h5,h6) .sl-badge:where(.astro-n3ngiwm6){vertical-align:middle}}
-@layer starlight.components{.card-grid:where(.astro-6guidrt7){display:grid;grid-template-columns:100%;gap:1rem}.card-grid:where(.astro-6guidrt7)>*{margin-top:0!important}@media(min-width:50rem){.card-grid:where(.astro-6guidrt7){grid-template-columns:1fr 1fr;gap:1.5rem}.stagger:where(.astro-6guidrt7){--stagger-height: 5rem;padding-bottom:var(--stagger-height)}.stagger:where(.astro-6guidrt7)>*:nth-child(2n){transform:translateY(var(--stagger-height))}}}
-@layer starlight.components{.card:where(.astro-fobaosbn){--sl-card-border: var(--sl-color-purple);--sl-card-bg: var(--sl-color-purple-low);border:1px solid var(--sl-color-gray-5);background-color:var(--sl-color-black);padding:clamp(1rem,calc(.125rem + 3vw),2.5rem);flex-direction:column;gap:clamp(.5rem,calc(.125rem + 1vw),1rem)}.card:where(.astro-fobaosbn):nth-child(4n+1){--sl-card-border: var(--sl-color-orange);--sl-card-bg: var(--sl-color-orange-low)}.card:where(.astro-fobaosbn):nth-child(4n+3){--sl-card-border: var(--sl-color-green);--sl-card-bg: var(--sl-color-green-low)}.card:where(.astro-fobaosbn):nth-child(4n+4){--sl-card-border: var(--sl-color-red);--sl-card-bg: var(--sl-color-red-low)}.card:where(.astro-fobaosbn):nth-child(4n+5){--sl-card-border: var(--sl-color-blue);--sl-card-bg: var(--sl-color-blue-low)}.title:where(.astro-fobaosbn){font-weight:600;font-size:var(--sl-text-h4);color:var(--sl-color-white);line-height:var(--sl-line-height-headings);gap:1rem;align-items:center}.card:where(.astro-fobaosbn) .icon:where(.astro-fobaosbn){border:1px solid var(--sl-card-border);background-color:var(--sl-card-bg);padding:.2em;border-radius:.25rem;flex-shrink:0}.card:where(.astro-fobaosbn) .body:where(.astro-fobaosbn){margin:0;font-size:clamp(var(--sl-text-sm),calc(.5rem + 1vw),var(--sl-text-body))}}
-@layer starlight.components{svg:where(.astro-zyiyrzho){color:var(--sl-icon-color);font-size:var(--sl-icon-size, 1em);width:1em;height:1em}}
-@layer starlight.components{starlight-tabs:where(.astro-tyh3unqs){display:block}.tablist-wrapper:where(.astro-tyh3unqs){overflow-x:auto}:where(.astro-tyh3unqs)[role=tablist]{display:flex;list-style:none;border-bottom:2px solid var(--sl-color-gray-5);padding:0}.tab:where(.astro-tyh3unqs){display:flex}.tab:where(.astro-tyh3unqs)>:where(.astro-tyh3unqs)[role=tab]{--sl-tab-color-border: var(--sl-color-gray-5);display:flex;align-items:center;gap:.5rem;line-height:var(--sl-line-height-headings);padding:.275rem 1.25rem;text-decoration:none;box-shadow:0 2px 0 var(--sl-tab-color-border);color:var(--sl-color-gray-3);outline-offset:var(--sl-outline-offset-inside);overflow-wrap:initial}.tab:where(.astro-tyh3unqs) :where(.astro-tyh3unqs)[role=tab][aria-selected=true]{--sl-tab-color-border: var(--sl-color-text-accent);color:var(--sl-color-white);font-weight:600}.tablist-wrapper:where(.astro-tyh3unqs)~[role=tabpanel]{margin-top:1rem}}
-@layer starlight.components{.sl-steps{--bullet-size: calc(var(--sl-line-height) * 1rem);--bullet-margin: .375rem;list-style:none;counter-reset:steps-counter var(--sl-steps-start, 0);padding-inline-start:0}.sl-steps>li{counter-increment:steps-counter;position:relative;padding-inline-start:calc(var(--bullet-size) + 1rem);padding-bottom:1px;min-height:calc(var(--bullet-size) + var(--bullet-margin))}.sl-steps>li+li{margin-top:0}.sl-steps>li:before{content:counter(steps-counter);position:absolute;top:0;inset-inline-start:0;width:var(--bullet-size);height:var(--bullet-size);line-height:var(--bullet-size);font-size:var(--sl-text-xs);font-weight:600;text-align:center;color:var(--sl-color-white);background-color:var(--sl-color-gray-6);border-radius:99rem;box-shadow:inset 0 0 0 1px var(--sl-color-gray-5)}.sl-steps>li:after{--guide-width: 1px;content:"";position:absolute;top:calc(var(--bullet-size) + var(--bullet-margin));bottom:var(--bullet-margin);inset-inline-start:calc((var(--bullet-size) - var(--guide-width)) / 2);width:var(--guide-width);background-color:var(--sl-color-hairline-light)}}@layer starlight.content{.sl-steps>li>:first-child{--lh: calc(1em * var(--sl-line-height));--shift-y: calc(.5 * (var(--bullet-size) - var(--lh)));transform:translateY(var(--shift-y));margin-bottom:var(--shift-y)}.sl-steps>li>:first-child:where(h1,h2,h3,h4,h5,h6){--lh: calc(1em * var(--sl-line-height-headings))}@supports (--prop: 1lh){.sl-steps>li>:first-child{--lh: 1lh}}}
-@layer starlight.components{.sl-link-button:where(.astro-ijkaixh6){align-items:center;border:1px solid transparent;border-radius:999rem;display:inline-flex;font-size:var(--sl-text-sm);gap:.5em;line-height:1.1875;outline-offset:.25rem;padding:.4375rem 1.125rem;text-decoration:none}.sl-link-button:where(.astro-ijkaixh6).primary{background:var(--sl-color-text-accent);border-color:var(--sl-color-text-accent);color:var(--sl-color-black)}.sl-link-button:where(.astro-ijkaixh6).primary:hover{color:var(--sl-color-black)}.sl-link-button:where(.astro-ijkaixh6).secondary{border-color:inherit;color:var(--sl-color-white)}.sl-link-button:where(.astro-ijkaixh6).minimal{color:var(--sl-color-white);padding-inline:0}.sl-link-button:where(.astro-ijkaixh6) svg{flex-shrink:0}@media(min-width:50rem){.sl-link-button:where(.astro-ijkaixh6){font-size:var(--sl-text-base);padding:.9375rem 1.25rem}}.sl-markdown-content .sl-link-button:where(.astro-ijkaixh6){margin-inline-end:1rem}.sl-markdown-content .sl-link-button:where(.astro-ijkaixh6):not(:where(p *)){margin-block:1rem}}
-</style><script type="module" src="/_astro/page.B1D-nYk3.js"></script></head> <body class="astro-mjs56nzy"> <a href="#_top" class="astro-qybxun7s">Skip to content</a>  <div class="page sl-flex astro-px3dtb7d"> <header class="header astro-px3dtb7d"><div class="header astro-p3kfdba6"> <div class="title-wrapper sl-flex astro-p3kfdba6"> <a href="/" class="site-title sl-flex astro-cifckgzf">  <span class="astro-cifckgzf" translate="no"> BluStore API </span> </a>  </div> <div class="sl-flex print:hidden astro-p3kfdba6"> <site-search class="astro-p3kfdba6 astro-25lfi4pb" data-translations="{&#34;placeholder&#34;:&#34;Search&#34;}"> <button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" class="astro-25lfi4pb"> <svg aria-hidden="true" class="astro-25lfi4pb astro-zyiyrzho" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg> <span class="sl-hidden md:sl-block astro-25lfi4pb" aria-hidden="true">Search</span> <kbd class="sl-hidden md:sl-flex astro-25lfi4pb" style="display: none;"> <kbd class="astro-25lfi4pb">Ctrl</kbd><kbd class="astro-25lfi4pb">K</kbd> </kbd> </button> <dialog style="padding:0" aria-label="Search" class="astro-25lfi4pb"> <div class="dialog-frame sl-flex astro-25lfi4pb">  <button data-close-modal class="sl-flex md:sl-hidden astro-25lfi4pb"> Cancel </button> <div class="search-container astro-25lfi4pb"> <div id="starlight__search" class="astro-25lfi4pb"></div> </div> </div> </dialog> </site-search>  <script>
-	(() => {
-		const openBtn = document.querySelector('button[data-open-modal]');
-		const shortcut = openBtn?.querySelector('kbd');
-		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
-		const platformKey = shortcut.querySelector('kbd');
-		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
-			platformKey.textContent = '⌘';
-			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
-		}
-		shortcut.style.display = '';
-	})();
-</script> <script type="module" src="/_astro/Search.astro_astro_type_script_index_0_lang.cjYDvRdi.js"></script>   </div> <div class="sl-hidden md:sl-flex print:hidden right-group astro-p3kfdba6"> <div class="sl-flex social-icons astro-p3kfdba6"> <a href="https://github.com/bluware-dev/blustore-api" rel="me" class="sl-flex astro-zi2ydsol"><span class="sr-only astro-zi2ydsol">GitHub</span><svg aria-hidden="true" class="astro-zi2ydsol astro-zyiyrzho" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a> </div> <starlight-theme-select>  <label style="--sl-select-width: 6.25em" class="astro-jqyeacje"> <span class="sr-only astro-jqyeacje">Select theme</span> <svg aria-hidden="true" class="icon label-icon astro-jqyeacje astro-zyiyrzho" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg> <select autocomplete="off" class="astro-jqyeacje"> <option value="dark" class="astro-jqyeacje">Dark</option><option value="light" class="astro-jqyeacje">Light</option><option value="auto" selected class="astro-jqyeacje">Auto</option> </select> <svg aria-hidden="true" class="icon caret astro-jqyeacje astro-zyiyrzho" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg> </label>  </starlight-theme-select>  <script>
-	StarlightThemeProvider.updatePickers();
-</script> <script type="module">const r="starlight-theme",o=e=>e==="auto"||e==="dark"||e==="light"?e:"auto",c=()=>o(typeof localStorage<"u"&&localStorage.getItem(r));function n(e){typeof localStorage<"u"&&localStorage.setItem(r,e==="light"||e==="dark"?e:"")}const l=()=>matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";function t(e){StarlightThemeProvider.updatePickers(e),document.documentElement.dataset.theme=e==="auto"?l():e,n(e)}matchMedia("(prefers-color-scheme: light)").addEventListener("change",()=>{c()==="auto"&&t("auto")});class s extends HTMLElement{constructor(){super(),t(c()),this.querySelector("select")?.addEventListener("change",a=>{a.currentTarget instanceof HTMLSelectElement&&t(o(a.currentTarget.value))})}}customElements.define("starlight-theme-select",s);</script> <script type="module">class s extends HTMLElement{constructor(){super();const e=this.querySelector("select");e&&(e.addEventListener("change",t=>{t.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=t.currentTarget.value)}),window.addEventListener("pageshow",t=>{if(!t.persisted)return;const n=e.querySelector("option[selected]")?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}}customElements.define("starlight-lang-select",s);</script> </div> </div> </header> <nav class="sidebar print:hidden astro-px3dtb7d" aria-label="Main"> <starlight-menu-button class="print:hidden astro-jlnvgg3i"> <button aria-expanded="false" aria-label="Menu" aria-controls="starlight__sidebar" class="sl-flex md:sl-hidden astro-jlnvgg3i"> <svg aria-hidden="true" class="open-menu astro-jlnvgg3i astro-zyiyrzho" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg> <svg aria-hidden="true" class="close-menu astro-jlnvgg3i astro-zyiyrzho" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg> </button> </starlight-menu-button> <script type="module">class s extends HTMLElement{constructor(){super(),this.btn=this.querySelector("button"),this.btn.addEventListener("click",()=>this.toggleExpanded());const t=this.closest("nav");t&&t.addEventListener("keyup",e=>this.closeOnEscape(e))}setExpanded(t){this.setAttribute("aria-expanded",String(t)),document.body.toggleAttribute("data-mobile-menu-expanded",t)}toggleExpanded(){this.setExpanded(this.getAttribute("aria-expanded")!=="true")}closeOnEscape(t){t.code==="Escape"&&(this.setExpanded(!1),this.btn.focus())}}customElements.define("starlight-menu-button",s);</script>   <div id="starlight__sidebar" class="sidebar-pane astro-px3dtb7d"> <div class="sidebar-content sl-flex astro-px3dtb7d"> <sl-sidebar-state-persist data-hash="12ucc66" class="astro-clrcnjpd"> <script aria-hidden="true">
-		(() => {
-			try {
-				if (!matchMedia('(min-width: 50em)').matches) return;
-				/** @type {HTMLElement | null} */
-				const target = document.querySelector('sl-sidebar-state-persist');
-				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
-				if (!target || !state || target.dataset.hash !== state.hash) return;
-				window._starlightScrollRestore = state.scroll;
-				customElements.define(
-					'sl-sidebar-restore',
-					class SidebarRestore extends HTMLElement {
-						connectedCallback() {
+					customElements.define('starlight-menu-button', s);
+				</script>
+				<div
+					id="starlight__sidebar"
+					class="sidebar-pane astro-px3dtb7d"
+				>
+					<div class="sidebar-content sl-flex astro-px3dtb7d">
+						<sl-sidebar-state-persist
+							data-hash="12ucc66"
+							class="astro-clrcnjpd"
+						>
+							<script aria-hidden="true">
+								(() => {
+									try {
+										if (
+											!matchMedia('(min-width: 50em)')
+												.matches
+										)
+											return;
+										/** @type {HTMLElement | null} */
+										const target = document.querySelector(
+											'sl-sidebar-state-persist'
+										);
+										const state = JSON.parse(
+											sessionStorage.getItem(
+												'sl-sidebar-state'
+											) || '0'
+										);
+										if (
+											!target ||
+											!state ||
+											target.dataset.hash !== state.hash
+										)
+											return;
+										window._starlightScrollRestore =
+											state.scroll;
+										customElements.define(
+											'sl-sidebar-restore',
+											class SidebarRestore extends HTMLElement {
+												connectedCallback() {
+													try {
+														const idx = parseInt(
+															this.dataset
+																.index || ''
+														);
+														const details =
+															this.closest(
+																'details'
+															);
+														if (
+															details &&
+															typeof state.open[
+																idx
+															] === 'boolean'
+														)
+															details.open =
+																state.open[idx];
+													} catch {}
+												}
+											}
+										);
+									} catch {}
+								})();
+							</script>
+							<ul class="top-level astro-wtbyclob">
+								<li class="astro-wtbyclob">
+									<details open class="astro-wtbyclob">
+										<summary class="astro-wtbyclob">
+											<span
+												class="group-label astro-wtbyclob"
+											>
+												<span
+													class="large astro-wtbyclob"
+													>Sobre el Proyecto</span
+												>
+											</span>
+											<svg
+												aria-hidden="true"
+												class="caret astro-wtbyclob astro-zyiyrzho"
+												width="16"
+												height="16"
+												viewBox="0 0 24 24"
+												fill="currentColor"
+												style="--sl-icon-size: 1.25rem"
+											>
+												<path
+													d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"
+												/>
+											</svg>
+										</summary>
+										<sl-sidebar-restore
+											data-index="0"
+										></sl-sidebar-restore>
+										<ul class="astro-wtbyclob">
+											<li class="astro-wtbyclob">
+												<a
+													href="/docs/guides/introduction/"
+													aria-current="false"
+													class="astro-wtbyclob"
+												>
+													<span class="astro-wtbyclob"
+														>Introducción</span
+													>
+												</a>
+											</li>
+											<li class="astro-wtbyclob">
+												<a
+													href="/docs/guides/architecture/"
+													aria-current="page"
+													class="astro-wtbyclob"
+												>
+													<span class="astro-wtbyclob"
+														>Arquitectura</span
+													>
+												</a>
+											</li>
+										</ul>
+									</details>
+								</li>
+								<li class="astro-wtbyclob">
+									<details class="astro-wtbyclob">
+										<summary class="astro-wtbyclob">
+											<span
+												class="group-label astro-wtbyclob"
+											>
+												<span
+													class="large astro-wtbyclob"
+													>Referencia de la API</span
+												>
+											</span>
+											<svg
+												aria-hidden="true"
+												class="caret astro-wtbyclob astro-zyiyrzho"
+												width="16"
+												height="16"
+												viewBox="0 0 24 24"
+												fill="currentColor"
+												style="--sl-icon-size: 1.25rem"
+											>
+												<path
+													d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"
+												/>
+											</svg>
+										</summary>
+										<sl-sidebar-restore
+											data-index="1"
+										></sl-sidebar-restore>
+										<ul class="astro-wtbyclob">
+											<li class="astro-wtbyclob">
+												<a
+													href="/docs/reference/"
+													aria-current="false"
+													class="astro-wtbyclob"
+												>
+													<span class="astro-wtbyclob"
+														>Overview</span
+													>
+												</a>
+											</li>
+											<li class="astro-wtbyclob">
+												<details class="astro-wtbyclob">
+													<summary
+														class="astro-wtbyclob"
+													>
+														<span
+															class="group-label astro-wtbyclob"
+														>
+															<span
+																class="large astro-wtbyclob"
+																>Auth</span
+															>
+														</span>
+														<svg
+															aria-hidden="true"
+															class="caret astro-wtbyclob astro-zyiyrzho"
+															width="16"
+															height="16"
+															viewBox="0 0 24 24"
+															fill="currentColor"
+															style="
+																--sl-icon-size: 1.25rem;
+															"
+														>
+															<path
+																d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"
+															/>
+														</svg>
+													</summary>
+													<sl-sidebar-restore
+														data-index="2"
+													></sl-sidebar-restore>
+													<ul class="astro-wtbyclob">
+														<li
+															class="astro-wtbyclob"
+														>
+															<a
+																href="/docs/reference/operations/apiauthlogin/"
+																aria-current="false"
+																class="astro-wtbyclob"
+															>
+																<span
+																	class="astro-wtbyclob"
+																	>Login
+																	Demo</span
+																>
+															</a>
+														</li>
+														<li
+															class="astro-wtbyclob"
+														>
+															<a
+																href="/docs/reference/operations/apiauthregister/"
+																aria-current="false"
+																class="astro-wtbyclob"
+															>
+																<span
+																	class="astro-wtbyclob"
+																	>Register</span
+																>
+															</a>
+														</li>
+													</ul>
+												</details>
+											</li>
+											<li class="astro-wtbyclob">
+												<details class="astro-wtbyclob">
+													<summary
+														class="astro-wtbyclob"
+													>
+														<span
+															class="group-label astro-wtbyclob"
+														>
+															<span
+																class="large astro-wtbyclob"
+																>Products</span
+															>
+														</span>
+														<svg
+															aria-hidden="true"
+															class="caret astro-wtbyclob astro-zyiyrzho"
+															width="16"
+															height="16"
+															viewBox="0 0 24 24"
+															fill="currentColor"
+															style="
+																--sl-icon-size: 1.25rem;
+															"
+														>
+															<path
+																d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"
+															/>
+														</svg>
+													</summary>
+													<sl-sidebar-restore
+														data-index="3"
+													></sl-sidebar-restore>
+													<ul class="astro-wtbyclob">
+														<li
+															class="astro-wtbyclob"
+														>
+															<a
+																href="/docs/reference/operations/apiproductscreate/"
+																aria-current="false"
+																class="astro-wtbyclob"
+															>
+																<span
+																	class="astro-wtbyclob"
+																	>Crear
+																	Producto</span
+																>
+															</a>
+														</li>
+														<li
+															class="astro-wtbyclob"
+														>
+															<a
+																href="/docs/reference/operations/apiproducts/"
+																aria-current="false"
+																class="astro-wtbyclob"
+															>
+																<span
+																	class="astro-wtbyclob"
+																	>Todos los
+																	Productos</span
+																>
+															</a>
+														</li>
+														<li
+															class="astro-wtbyclob"
+														>
+															<a
+																href="/docs/reference/operations/apiproductsid/get/"
+																aria-current="false"
+																class="astro-wtbyclob"
+															>
+																<span
+																	class="astro-wtbyclob"
+																	>Producto
+																	por ID</span
+																>
+															</a>
+														</li>
+														<li
+															class="astro-wtbyclob"
+														>
+															<a
+																href="/docs/reference/operations/apiproductsid/delete/"
+																aria-current="false"
+																class="astro-wtbyclob"
+															>
+																<span
+																	class="astro-wtbyclob"
+																	>Eliminar
+																	Producto</span
+																>
+															</a>
+														</li>
+														<li
+															class="astro-wtbyclob"
+														>
+															<a
+																href="/docs/reference/operations/apiproductsupdate/"
+																aria-current="false"
+																class="astro-wtbyclob"
+															>
+																<span
+																	class="astro-wtbyclob"
+																	>Actualizar
+																	Producto</span
+																>
+															</a>
+														</li>
+													</ul>
+												</details>
+											</li>
+											<li class="astro-wtbyclob">
+												<details class="astro-wtbyclob">
+													<summary
+														class="astro-wtbyclob"
+													>
+														<span
+															class="group-label astro-wtbyclob"
+														>
+															<span
+																class="large astro-wtbyclob"
+																>Other</span
+															>
+														</span>
+														<svg
+															aria-hidden="true"
+															class="caret astro-wtbyclob astro-zyiyrzho"
+															width="16"
+															height="16"
+															viewBox="0 0 24 24"
+															fill="currentColor"
+															style="
+																--sl-icon-size: 1.25rem;
+															"
+														>
+															<path
+																d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"
+															/>
+														</svg>
+													</summary>
+													<sl-sidebar-restore
+														data-index="4"
+													></sl-sidebar-restore>
+													<ul class="astro-wtbyclob">
+														<li
+															class="astro-wtbyclob"
+														>
+															<a
+																href="/docs/reference/operations/health/"
+																aria-current="false"
+																class="astro-wtbyclob"
+															>
+																<span
+																	class="astro-wtbyclob"
+																	>Health
+																	Check</span
+																>
+															</a>
+														</li>
+													</ul>
+												</details>
+											</li>
+										</ul>
+									</details>
+								</li>
+							</ul>
+							<script aria-hidden="true">
+								(() => {
+									const scroller =
+										document.getElementById(
+											'starlight__sidebar'
+										);
+									if (
+										!window._starlightScrollRestore ||
+										!scroller
+									)
+										return;
+									scroller.scrollTop =
+										window._starlightScrollRestore;
+									delete window._starlightScrollRestore;
+								})();
+							</script>
+						</sl-sidebar-state-persist>
+						<div class="md:sl-hidden">
+							<div
+								class="mobile-preferences sl-flex astro-qisrqjyh"
+							>
+								<div class="social-icons astro-qisrqjyh">
+									<a
+										href="https://github.com/bluware-dev/blustore-api"
+										rel="me"
+										class="sl-flex astro-zi2ydsol"
+										><span class="sr-only astro-zi2ydsol"
+											>GitHub</span
+										><svg
+											aria-hidden="true"
+											class="astro-zi2ydsol astro-zyiyrzho"
+											width="16"
+											height="16"
+											viewBox="0 0 24 24"
+											fill="currentColor"
+											style="--sl-icon-size: 1em"
+										>
+											<path
+												d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"
+											/></svg
+									></a>
+								</div>
+								<starlight-theme-select>
+									<label
+										style="--sl-select-width: 6.25em"
+										class="astro-jqyeacje"
+									>
+										<span class="sr-only astro-jqyeacje"
+											>Select theme</span
+										>
+										<svg
+											aria-hidden="true"
+											class="icon label-icon astro-jqyeacje astro-zyiyrzho"
+											width="16"
+											height="16"
+											viewBox="0 0 24 24"
+											fill="currentColor"
+											style="--sl-icon-size: 1em"
+										>
+											<path
+												d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"
+											/>
+										</svg>
+										<select
+											autocomplete="off"
+											class="astro-jqyeacje"
+										>
+											<option
+												value="dark"
+												class="astro-jqyeacje"
+											>
+												Dark
+											</option>
+											<option
+												value="light"
+												class="astro-jqyeacje"
+											>
+												Light
+											</option>
+											<option
+												value="auto"
+												selected
+												class="astro-jqyeacje"
+											>
+												Auto
+											</option>
+										</select>
+										<svg
+											aria-hidden="true"
+											class="icon caret astro-jqyeacje astro-zyiyrzho"
+											width="16"
+											height="16"
+											viewBox="0 0 24 24"
+											fill="currentColor"
+											style="--sl-icon-size: 1em"
+										>
+											<path
+												d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"
+											/>
+										</svg>
+									</label>
+								</starlight-theme-select>
+								<script>
+									StarlightThemeProvider.updatePickers();
+								</script>
+							</div>
+						</div>
+					</div>
+				</div>
+			</nav>
+			<div class="main-frame astro-px3dtb7d">
+				<script type="module">
+					const a = document.getElementById('starlight__sidebar'),
+						n = a?.querySelector('sl-sidebar-state-persist'),
+						o = 'sl-sidebar-state',
+						i = () => {
+							let t = [];
+							const e = n?.dataset.hash || '';
 							try {
-								const idx = parseInt(this.dataset.index || '');
-								const details = this.closest('details');
-								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+								const s = sessionStorage.getItem(o),
+									r = JSON.parse(s || '{}');
+								Array.isArray(r.open) &&
+									r.hash === e &&
+									(t = r.open);
 							} catch {}
-						}
-					}
-				);
-			} catch {}
-		})();
-	</script>  <ul class="top-level astro-wtbyclob"> <li class="astro-wtbyclob"> <details open class="astro-wtbyclob"> <summary class="astro-wtbyclob"> <span class="group-label astro-wtbyclob"> <span class="large astro-wtbyclob">Sobre el Proyecto</span>  </span> <svg aria-hidden="true" class="caret astro-wtbyclob astro-zyiyrzho" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <sl-sidebar-restore data-index="0"></sl-sidebar-restore> <ul class="astro-wtbyclob"> <li class="astro-wtbyclob"> <a href="/docs/guides/introduction/" aria-current="false" class="astro-wtbyclob"> <span class="astro-wtbyclob">Introducción</span>  </a> </li><li class="astro-wtbyclob"> <a href="/docs/guides/architecture/" aria-current="page" class="astro-wtbyclob"> <span class="astro-wtbyclob">Arquitectura</span>  </a> </li> </ul>  </details> </li><li class="astro-wtbyclob"> <details class="astro-wtbyclob"> <summary class="astro-wtbyclob"> <span class="group-label astro-wtbyclob"> <span class="large astro-wtbyclob">Referencia de la API</span>  </span> <svg aria-hidden="true" class="caret astro-wtbyclob astro-zyiyrzho" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <sl-sidebar-restore data-index="1"></sl-sidebar-restore> <ul class="astro-wtbyclob"> <li class="astro-wtbyclob"> <a href="/docs/reference/" aria-current="false" class="astro-wtbyclob"> <span class="astro-wtbyclob">Overview</span>  </a> </li><li class="astro-wtbyclob"> <details class="astro-wtbyclob"> <summary class="astro-wtbyclob"> <span class="group-label astro-wtbyclob"> <span class="large astro-wtbyclob">Auth</span>  </span> <svg aria-hidden="true" class="caret astro-wtbyclob astro-zyiyrzho" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <sl-sidebar-restore data-index="2"></sl-sidebar-restore> <ul class="astro-wtbyclob"> <li class="astro-wtbyclob"> <a href="/docs/reference/operations/apiauthlogin/" aria-current="false" class="astro-wtbyclob"> <span class="astro-wtbyclob">Login Demo</span>  </a> </li><li class="astro-wtbyclob"> <a href="/docs/reference/operations/apiauthregister/" aria-current="false" class="astro-wtbyclob"> <span class="astro-wtbyclob">Register</span>  </a> </li> </ul>  </details> </li><li class="astro-wtbyclob"> <details class="astro-wtbyclob"> <summary class="astro-wtbyclob"> <span class="group-label astro-wtbyclob"> <span class="large astro-wtbyclob">Products</span>  </span> <svg aria-hidden="true" class="caret astro-wtbyclob astro-zyiyrzho" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <sl-sidebar-restore data-index="3"></sl-sidebar-restore> <ul class="astro-wtbyclob"> <li class="astro-wtbyclob"> <a href="/docs/reference/operations/apiproductscreate/" aria-current="false" class="astro-wtbyclob"> <span class="astro-wtbyclob">Crear Producto</span>  </a> </li><li class="astro-wtbyclob"> <a href="/docs/reference/operations/apiproducts/" aria-current="false" class="astro-wtbyclob"> <span class="astro-wtbyclob">Todos los Productos</span>  </a> </li><li class="astro-wtbyclob"> <a href="/docs/reference/operations/apiproductsid/get/" aria-current="false" class="astro-wtbyclob"> <span class="astro-wtbyclob">Producto por ID</span>  </a> </li><li class="astro-wtbyclob"> <a href="/docs/reference/operations/apiproductsid/delete/" aria-current="false" class="astro-wtbyclob"> <span class="astro-wtbyclob">Eliminar Producto</span>  </a> </li><li class="astro-wtbyclob"> <a href="/docs/reference/operations/apiproductsupdate/" aria-current="false" class="astro-wtbyclob"> <span class="astro-wtbyclob">Actualizar Producto</span>  </a> </li> </ul>  </details> </li><li class="astro-wtbyclob"> <details class="astro-wtbyclob"> <summary class="astro-wtbyclob"> <span class="group-label astro-wtbyclob"> <span class="large astro-wtbyclob">Other</span>  </span> <svg aria-hidden="true" class="caret astro-wtbyclob astro-zyiyrzho" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <sl-sidebar-restore data-index="4"></sl-sidebar-restore> <ul class="astro-wtbyclob"> <li class="astro-wtbyclob"> <a href="/docs/reference/operations/health/" aria-current="false" class="astro-wtbyclob"> <span class="astro-wtbyclob">Health Check</span>  </a> </li> </ul>  </details> </li> </ul>  </details> </li> </ul>   <script aria-hidden="true">
-		(() => {
-			const scroller = document.getElementById('starlight__sidebar');
-			if (!window._starlightScrollRestore || !scroller) return;
-			scroller.scrollTop = window._starlightScrollRestore;
-			delete window._starlightScrollRestore;
-		})();
-	</script> </sl-sidebar-state-persist>  <div class="md:sl-hidden"> <div class="mobile-preferences sl-flex astro-qisrqjyh"> <div class="social-icons astro-qisrqjyh"> <a href="https://github.com/bluware-dev/blustore-api" rel="me" class="sl-flex astro-zi2ydsol"><span class="sr-only astro-zi2ydsol">GitHub</span><svg aria-hidden="true" class="astro-zi2ydsol astro-zyiyrzho" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a> </div> <starlight-theme-select>  <label style="--sl-select-width: 6.25em" class="astro-jqyeacje"> <span class="sr-only astro-jqyeacje">Select theme</span> <svg aria-hidden="true" class="icon label-icon astro-jqyeacje astro-zyiyrzho" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg> <select autocomplete="off" class="astro-jqyeacje"> <option value="dark" class="astro-jqyeacje">Dark</option><option value="light" class="astro-jqyeacje">Light</option><option value="auto" selected class="astro-jqyeacje">Auto</option> </select> <svg aria-hidden="true" class="icon caret astro-jqyeacje astro-zyiyrzho" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg> </label>  </starlight-theme-select>  <script>
-	StarlightThemeProvider.updatePickers();
-</script>   </div>  </div> </div> </div> </nav> <div class="main-frame astro-px3dtb7d">  <script type="module">const a=document.getElementById("starlight__sidebar"),n=a?.querySelector("sl-sidebar-state-persist"),o="sl-sidebar-state",i=()=>{let t=[];const e=n?.dataset.hash||"";try{const s=sessionStorage.getItem(o),r=JSON.parse(s||"{}");Array.isArray(r.open)&&r.hash===e&&(t=r.open)}catch{}return{hash:e,open:t,scroll:a?.scrollTop||0}},c=t=>{try{sessionStorage.setItem(o,JSON.stringify(t))}catch{}},d=()=>c(i()),l=(t,e)=>{const s=i();s.open[e]=t,c(s)};n?.addEventListener("click",t=>{if(!(t.target instanceof Element))return;const e=t.target.closest("summary")?.closest("details");if(!e)return;const s=e.querySelector("sl-sidebar-restore"),r=parseInt(s?.dataset.index||"");isNaN(r)||l(!e.open,r)});addEventListener("visibilitychange",()=>{document.visibilityState==="hidden"&&d()});addEventListener("pageHide",d);</script> <div class="lg:sl-flex astro-zbsfwr4k"> <aside class="right-sidebar-container print:hidden astro-zbsfwr4k"> <div class="right-sidebar astro-zbsfwr4k"> <div class="lg:sl-hidden astro-xpfjpvqg"><mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-eqe2sosc"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-eqe2sosc"><details id="starlight__mobile-toc" class="astro-eqe2sosc"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-eqe2sosc"><span class="toggle sl-flex astro-eqe2sosc">On this page<svg aria-hidden="true" class="caret astro-eqe2sosc astro-zyiyrzho" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></span><span class="display-current astro-eqe2sosc"></span></summary><div class="dropdown astro-eqe2sosc"><ul class="isMobile astro-oq2tk7jh" style="--depth: 0;"> <li class="astro-oq2tk7jh" style="--depth: 0;"> <a href="#_top" class="astro-oq2tk7jh" style="--depth: 0;"> <span class="astro-oq2tk7jh" style="--depth: 0;">Overview</span> </a>  </li><li class="astro-oq2tk7jh" style="--depth: 0;"> <a href="#principios-de-diseño" class="astro-oq2tk7jh" style="--depth: 0;"> <span class="astro-oq2tk7jh" style="--depth: 0;">Principios de Diseño</span> </a>  </li><li class="astro-oq2tk7jh" style="--depth: 0;"> <a href="#capas-y-responsabilidades" class="astro-oq2tk7jh" style="--depth: 0;"> <span class="astro-oq2tk7jh" style="--depth: 0;">Capas y Responsabilidades</span> </a> <ul class="isMobile astro-oq2tk7jh" style="--depth: 1;"> <li class="astro-oq2tk7jh" style="--depth: 1;"> <a href="#detalles-por-capa" class="astro-oq2tk7jh" style="--depth: 1;"> <span class="astro-oq2tk7jh" style="--depth: 1;">Detalles por Capa</span> </a>  </li> </ul>  </li><li class="astro-oq2tk7jh" style="--depth: 0;"> <a href="#flujo-de-datos" class="astro-oq2tk7jh" style="--depth: 0;"> <span class="astro-oq2tk7jh" style="--depth: 0;">Flujo de Datos</span> </a>  </li><li class="astro-oq2tk7jh" style="--depth: 0;"> <a href="#convenciones-de-código" class="astro-oq2tk7jh" style="--depth: 0;"> <span class="astro-oq2tk7jh" style="--depth: 0;">Convenciones de Código</span> </a> <ul class="isMobile astro-oq2tk7jh" style="--depth: 1;"> <li class="astro-oq2tk7jh" style="--depth: 1;"> <a href="#controllers-y-services-namespace-pattern" class="astro-oq2tk7jh" style="--depth: 1;"> <span class="astro-oq2tk7jh" style="--depth: 1;">Controllers y Services: Namespace Pattern</span> </a>  </li><li class="astro-oq2tk7jh" style="--depth: 1;"> <a href="#normalización-de-respuestas" class="astro-oq2tk7jh" style="--depth: 1;"> <span class="astro-oq2tk7jh" style="--depth: 1;">Normalización de Respuestas</span> </a>  </li> </ul>  </li><li class="astro-oq2tk7jh" style="--depth: 0;"> <a href="#persistencia-firebase-firestore" class="astro-oq2tk7jh" style="--depth: 0;"> <span class="astro-oq2tk7jh" style="--depth: 0;">Persistencia: Firebase Firestore</span> </a> <ul class="isMobile astro-oq2tk7jh" style="--depth: 1;"> <li class="astro-oq2tk7jh" style="--depth: 1;"> <a href="#características" class="astro-oq2tk7jh" style="--depth: 1;"> <span class="astro-oq2tk7jh" style="--depth: 1;">Características</span> </a>  </li><li class="astro-oq2tk7jh" style="--depth: 1;"> <a href="#diferencias-con-mongodb" class="astro-oq2tk7jh" style="--depth: 1;"> <span class="astro-oq2tk7jh" style="--depth: 1;">Diferencias con MongoDB</span> </a>  </li><li class="astro-oq2tk7jh" style="--depth: 1;"> <a href="#estructura-actual" class="astro-oq2tk7jh" style="--depth: 1;"> <span class="astro-oq2tk7jh" style="--depth: 1;">Estructura Actual</span> </a>  </li><li class="astro-oq2tk7jh" style="--depth: 1;"> <a href="#id-management" class="astro-oq2tk7jh" style="--depth: 1;"> <span class="astro-oq2tk7jh" style="--depth: 1;">ID Management</span> </a>  </li> </ul>  </li><li class="astro-oq2tk7jh" style="--depth: 0;"> <a href="#seguridad-y-limitaciones" class="astro-oq2tk7jh" style="--depth: 0;"> <span class="astro-oq2tk7jh" style="--depth: 0;">Seguridad y Limitaciones</span> </a> <ul class="isMobile astro-oq2tk7jh" style="--depth: 1;"> <li class="astro-oq2tk7jh" style="--depth: 1;"> <a href="#implementado" class="astro-oq2tk7jh" style="--depth: 1;"> <span class="astro-oq2tk7jh" style="--depth: 1;">Implementado</span> </a>  </li><li class="astro-oq2tk7jh" style="--depth: 1;"> <a href="#pendiente-production-readiness" class="astro-oq2tk7jh" style="--depth: 1;"> <span class="astro-oq2tk7jh" style="--depth: 1;">Pendiente (Production Readiness)</span> </a>  </li> </ul>  </li><li class="astro-oq2tk7jh" style="--depth: 0;"> <a href="#escalabilidad-y-evolución" class="astro-oq2tk7jh" style="--depth: 0;"> <span class="astro-oq2tk7jh" style="--depth: 0;">Escalabilidad y Evolución</span> </a> <ul class="isMobile astro-oq2tk7jh" style="--depth: 1;"> <li class="astro-oq2tk7jh" style="--depth: 1;"> <a href="#ventajas-de-la-arquitectura-actual" class="astro-oq2tk7jh" style="--depth: 1;"> <span class="astro-oq2tk7jh" style="--depth: 1;">Ventajas de la Arquitectura Actual</span> </a>  </li><li class="astro-oq2tk7jh" style="--depth: 1;"> <a href="#próximos-pasos-arquitectónicos" class="astro-oq2tk7jh" style="--depth: 1;"> <span class="astro-oq2tk7jh" style="--depth: 1;">Próximos Pasos Arquitectónicos</span> </a>  </li><li class="astro-oq2tk7jh" style="--depth: 1;"> <a href="#recursos-utiles" class="astro-oq2tk7jh" style="--depth: 1;"> <span class="astro-oq2tk7jh" style="--depth: 1;">Recursos utiles</span> </a>  </li> </ul>  </li> </ul> </div></details></nav></mobile-starlight-toc><script type="module" src="/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.C181hMzK.js"></script></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-xpfjpvqg"><div class="sl-container astro-xpfjpvqg"><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul class="astro-oq2tk7jh" style="--depth: 0;"> <li class="astro-oq2tk7jh" style="--depth: 0;"> <a href="#_top" class="astro-oq2tk7jh" style="--depth: 0;"> <span class="astro-oq2tk7jh" style="--depth: 0;">Overview</span> </a>  </li><li class="astro-oq2tk7jh" style="--depth: 0;"> <a href="#principios-de-diseño" class="astro-oq2tk7jh" style="--depth: 0;"> <span class="astro-oq2tk7jh" style="--depth: 0;">Principios de Diseño</span> </a>  </li><li class="astro-oq2tk7jh" style="--depth: 0;"> <a href="#capas-y-responsabilidades" class="astro-oq2tk7jh" style="--depth: 0;"> <span class="astro-oq2tk7jh" style="--depth: 0;">Capas y Responsabilidades</span> </a> <ul class="astro-oq2tk7jh" style="--depth: 1;"> <li class="astro-oq2tk7jh" style="--depth: 1;"> <a href="#detalles-por-capa" class="astro-oq2tk7jh" style="--depth: 1;"> <span class="astro-oq2tk7jh" style="--depth: 1;">Detalles por Capa</span> </a>  </li> </ul>  </li><li class="astro-oq2tk7jh" style="--depth: 0;"> <a href="#flujo-de-datos" class="astro-oq2tk7jh" style="--depth: 0;"> <span class="astro-oq2tk7jh" style="--depth: 0;">Flujo de Datos</span> </a>  </li><li class="astro-oq2tk7jh" style="--depth: 0;"> <a href="#convenciones-de-código" class="astro-oq2tk7jh" style="--depth: 0;"> <span class="astro-oq2tk7jh" style="--depth: 0;">Convenciones de Código</span> </a> <ul class="astro-oq2tk7jh" style="--depth: 1;"> <li class="astro-oq2tk7jh" style="--depth: 1;"> <a href="#controllers-y-services-namespace-pattern" class="astro-oq2tk7jh" style="--depth: 1;"> <span class="astro-oq2tk7jh" style="--depth: 1;">Controllers y Services: Namespace Pattern</span> </a>  </li><li class="astro-oq2tk7jh" style="--depth: 1;"> <a href="#normalización-de-respuestas" class="astro-oq2tk7jh" style="--depth: 1;"> <span class="astro-oq2tk7jh" style="--depth: 1;">Normalización de Respuestas</span> </a>  </li> </ul>  </li><li class="astro-oq2tk7jh" style="--depth: 0;"> <a href="#persistencia-firebase-firestore" class="astro-oq2tk7jh" style="--depth: 0;"> <span class="astro-oq2tk7jh" style="--depth: 0;">Persistencia: Firebase Firestore</span> </a> <ul class="astro-oq2tk7jh" style="--depth: 1;"> <li class="astro-oq2tk7jh" style="--depth: 1;"> <a href="#características" class="astro-oq2tk7jh" style="--depth: 1;"> <span class="astro-oq2tk7jh" style="--depth: 1;">Características</span> </a>  </li><li class="astro-oq2tk7jh" style="--depth: 1;"> <a href="#diferencias-con-mongodb" class="astro-oq2tk7jh" style="--depth: 1;"> <span class="astro-oq2tk7jh" style="--depth: 1;">Diferencias con MongoDB</span> </a>  </li><li class="astro-oq2tk7jh" style="--depth: 1;"> <a href="#estructura-actual" class="astro-oq2tk7jh" style="--depth: 1;"> <span class="astro-oq2tk7jh" style="--depth: 1;">Estructura Actual</span> </a>  </li><li class="astro-oq2tk7jh" style="--depth: 1;"> <a href="#id-management" class="astro-oq2tk7jh" style="--depth: 1;"> <span class="astro-oq2tk7jh" style="--depth: 1;">ID Management</span> </a>  </li> </ul>  </li><li class="astro-oq2tk7jh" style="--depth: 0;"> <a href="#seguridad-y-limitaciones" class="astro-oq2tk7jh" style="--depth: 0;"> <span class="astro-oq2tk7jh" style="--depth: 0;">Seguridad y Limitaciones</span> </a> <ul class="astro-oq2tk7jh" style="--depth: 1;"> <li class="astro-oq2tk7jh" style="--depth: 1;"> <a href="#implementado" class="astro-oq2tk7jh" style="--depth: 1;"> <span class="astro-oq2tk7jh" style="--depth: 1;">Implementado</span> </a>  </li><li class="astro-oq2tk7jh" style="--depth: 1;"> <a href="#pendiente-production-readiness" class="astro-oq2tk7jh" style="--depth: 1;"> <span class="astro-oq2tk7jh" style="--depth: 1;">Pendiente (Production Readiness)</span> </a>  </li> </ul>  </li><li class="astro-oq2tk7jh" style="--depth: 0;"> <a href="#escalabilidad-y-evolución" class="astro-oq2tk7jh" style="--depth: 0;"> <span class="astro-oq2tk7jh" style="--depth: 0;">Escalabilidad y Evolución</span> </a> <ul class="astro-oq2tk7jh" style="--depth: 1;"> <li class="astro-oq2tk7jh" style="--depth: 1;"> <a href="#ventajas-de-la-arquitectura-actual" class="astro-oq2tk7jh" style="--depth: 1;"> <span class="astro-oq2tk7jh" style="--depth: 1;">Ventajas de la Arquitectura Actual</span> </a>  </li><li class="astro-oq2tk7jh" style="--depth: 1;"> <a href="#próximos-pasos-arquitectónicos" class="astro-oq2tk7jh" style="--depth: 1;"> <span class="astro-oq2tk7jh" style="--depth: 1;">Próximos Pasos Arquitectónicos</span> </a>  </li><li class="astro-oq2tk7jh" style="--depth: 1;"> <a href="#recursos-utiles" class="astro-oq2tk7jh" style="--depth: 1;"> <span class="astro-oq2tk7jh" style="--depth: 1;">Recursos utiles</span> </a>  </li> </ul>  </li> </ul> </nav></starlight-toc><script type="module" src="/_astro/TableOfContents.astro_astro_type_script_index_0_lang.CKWWgpjV.js"></script></div></div> </div> </aside> <div class="main-pane astro-zbsfwr4k">  <main data-pagefind-body class="astro-mjs56nzy" lang="en" dir="ltr">    <div class="content-panel astro-ny2srbsg"> <div class="sl-container astro-ny2srbsg"> <h1 id="_top" class="astro-efjibi6s">Arquitectura</h1>  </div> </div>  <div class="content-panel astro-ny2srbsg"> <div class="sl-container astro-ny2srbsg"> <div class="sl-markdown-content"> <div class="sl-heading-wrapper level-h2"><h2 id="principios-de-diseño">Principios de Diseño</h2><a class="sl-anchor-link" href="#principios-de-diseño"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Principios de Diseño”</span></a></div>
-<p>Esta API sigue una arquitectura en capas inspirada en <strong>‘Clean Architecture’</strong> y principios UNIX: modularidad, separación de responsabilidades, y componentes desacoplados que pueden evolucionar independientemente.</p>
-<blockquote>
-<p><strong>Nota Tecnica Realista</strong>: Esta API realmente implementa <a href="https://www.geeksforgeeks.org/computer-networks/layered-architecture-in-computer-networks/"><strong>Layered Architecture (3-Tier)</strong></a> con <a href="https://awesome-architecture.com/design-patterns/transaction-script-pattern/">Transaction Script Pattern</a>,
-separando presentación (Routes/Controllers), lógica de negocio (Services),
-y acceso a datos (Models) en capas horizontales desacopladas.</p>
-</blockquote>
-<p><strong>Filosofía core:</strong></p>
-<ul>
-<li><strong>KISS</strong>: Simplicidad sobre abstracción prematura</li>
-<li><strong>DRY</strong>: Normalización de códigos HTTP, mensajes de error y lógica de negocio</li>
-<li><strong>Separation of Concerns</strong>: Cada capa tiene una responsabilidad única y bien definida</li>
-<li><strong>Dependency Flow</strong>: Las dependencias fluyen hacia adentro (Routes → Controllers → Services → Models)</li>
-</ul>
-<hr>
-<div class="sl-heading-wrapper level-h2"><h2 id="capas-y-responsabilidades">Capas y Responsabilidades</h2><a class="sl-anchor-link" href="#capas-y-responsabilidades"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Capas y Responsabilidades”</span></a></div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>Capa</th><th>Responsabilidad</th><th>Maneja Estado</th><th>Depende de</th></tr></thead><tbody><tr><td><strong>Routes</strong></td><td>Define endpoints HTTP, aplica middlewares, delega a controller</td><td>No</td><td>Controllers</td></tr><tr><td><strong>Controllers</strong></td><td>Valida request, coordina service, serializa response HTTP</td><td>No</td><td>Services</td></tr><tr><td><strong>Services</strong></td><td>Lógica de dominio, orquestación, transformaciones de datos</td><td>Opcional</td><td>Models</td></tr><tr><td><strong>Models</strong></td><td>Acceso directo a persistencia (queries, CRUD atómico)</td><td>Opcional</td><td>Firebase/DB</td></tr></tbody></table>
-<div class="sl-heading-wrapper level-h3"><h3 id="detalles-por-capa">Detalles por Capa</h3><a class="sl-anchor-link" href="#detalles-por-capa"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Detalles por Capa”</span></a></div>
-<p><strong>Routes</strong>: Punto de entrada HTTP. Registra endpoints, aplica middlewares (auth, CORS), y delega inmediatamente al controlador. No contiene lógica de negocio.</p>
-<p><strong>Controllers</strong>: Capa de coordinación. Valida payloads y parámetros de entrada, invoca el servicio apropiado, captura errores y delega al error handler, serializa respuestas usando <code dir="auto">sendResponse()</code> con códigos HTTP normalizados.</p>
-<p><strong>Services</strong>: Core de la lógica de negocio. Orquesta operaciones complejas (crear producto con ID autoincrementable), transforma datos entre capas, gestiona reglas de dominio (validación de credenciales, demo user), retorna objetos de estado estandarizados (<code dir="auto">{success, status, data}</code>).</p>
-<p><strong>Models</strong>: Capa de persistencia pura. Ejecuta queries directas a Firebase (addDoc, getDocs, updateDoc, deleteDoc), maneja errores de conexión/query, retorna datos crudos o undefined. No contiene lógica de negocio.</p>
-<hr>
-<div class="sl-heading-wrapper level-h2"><h2 id="flujo-de-datos">Flujo de Datos</h2><a class="sl-anchor-link" href="#flujo-de-datos"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Flujo de Datos”</span></a></div>
-<picture> <source srcset="/_astro/flow-dark.DgQ6MBNG_1ifGuS.svg" type="image/svg+xml">  <img src="/_astro/flow-dark.DgQ6MBNG_1ifGuS.svg" alt="Architecture Flow" loading="lazy" decoding="async" fetchpriority="auto" width="1800" height="463"> </picture>
-<p><strong>Request Flow:</strong></p>
-<div class="expressive-code"><link rel="stylesheet" href="/_astro/ec.v4551.css"><script type="module" src="/_astro/ec.p1z7b.js"></script><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">HTTP Request → Route → Controller → Service → Model → Firebase</span></div></div></code></pre><div class="copy"><button title="Copy to clipboard" data-copied="Copied!" data-code="HTTP Request → Route → Controller → Service → Model → Firebase"><div></div></button></div></figure></div>
-<p><strong>Response Flow:</strong></p>
-<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">Firebase → Model (data/throw) → Service (result object) → Controller (HTTP serialization) → Client</span></div></div></code></pre><div class="copy"><button title="Copy to clipboard" data-copied="Copied!" data-code="Firebase → Model (data/throw) → Service (result object) → Controller (HTTP serialization) → Client"><div></div></button></div></figure></div>
-<p><strong>Error Flow:</strong></p>
-<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">Model (throw) → Service (propagate) → Controller (next(err)) → errorHandler → HTTP Error Response</span></div></div></code></pre><div class="copy"><button title="Copy to clipboard" data-copied="Copied!" data-code="Model (throw) → Service (propagate) → Controller (next(err)) → errorHandler → HTTP Error Response"><div></div></button></div></figure></div>
-<hr>
-<div class="sl-heading-wrapper level-h2"><h2 id="convenciones-de-código">Convenciones de Código</h2><a class="sl-anchor-link" href="#convenciones-de-código"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Convenciones de Código”</span></a></div>
-<div class="sl-heading-wrapper level-h3"><h3 id="controllers-y-services-namespace-pattern">Controllers y Services: Namespace Pattern</h3><a class="sl-anchor-link" href="#controllers-y-services-namespace-pattern"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Controllers y Services: Namespace Pattern”</span></a></div>
-<p>Funciones puras exportadas como namespace. Sin clases, sin estado compartido.</p>
-<p><strong>Nomenclatura estándar CRUD:</strong></p>
-<ul>
-<li><code dir="auto">create(req, res, next)</code> - POST</li>
-<li><code dir="auto">getAll(req, res, next)</code> - GET collection</li>
-<li><code dir="auto">getById(req, res, next)</code> - GET resource</li>
-<li><code dir="auto">update(req, res, next)</code> - PATCH (partial update)</li>
-<li><code dir="auto">remove(req, res, next)</code> - DELETE (evita shadowing de keyword <code dir="auto">delete</code>)</li>
-</ul>
-<p><strong>Importación:</strong></p>
-<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="js"><code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8844AE">import</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">*</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8844AE">as</span><span style="--0:#D6DEEB;--1:#403F53"> productController </span><span style="--0:#C792EA;--1:#8844AE">from</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#ECC48D;--1:#984E4D">#api/products/product.controller.js</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#D6DEEB;--1:#403F53">;</span></div></div><div class="ec-line"><div class="code">
-</div></div><div class="ec-line"><div class="code"><span style="--0:#7FDBCA;--1:#096E72">router</span><span style="--0:#C792EA;--1:#8844AE">.</span><span style="--0:#82AAFF;--1:#3B61B0">post</span><span style="--0:#D6DEEB;--1:#403F53">(</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#ECC48D;--1:#984E4D">/create</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--1:#403F53"><span style="--0:#D6DEEB">, </span><span style="--0:#D7DBE0">auth</span><span style="--0:#D6DEEB">, </span></span><span style="--0:#7FDBCA;--1:#096E72">productController</span><span style="--0:#C792EA;--1:#8844AE">.</span><span style="--0:#7FDBCA;--1:#096E72">create</span><span style="--0:#D6DEEB;--1:#403F53">);</span></div></div></code></pre><div class="copy"><button title="Copy to clipboard" data-copied="Copied!" data-code="import * as productController from &#x27;#api/products/product.controller.js&#x27;;router.post(&#x27;/create&#x27;, auth, productController.create);"><div></div></button></div></figure></div>
-<div class="sl-heading-wrapper level-h3"><h3 id="normalización-de-respuestas">Normalización de Respuestas</h3><a class="sl-anchor-link" href="#normalización-de-respuestas"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Normalización de Respuestas”</span></a></div>
-<p>Todas las respuestas HTTP usan <code dir="auto">sendResponse()</code> para garantizar formato consistente:</p>
-<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="js"><code><div class="ec-line"><div class="code"><span style="--0:#919F9F;--1:#5D6376">// Success</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">{ success: </span><span style="--0:#FF6A83;--1:#A24848">true</span><span style="--0:#D6DEEB;--1:#403F53">, code: </span><span style="--0:#F78C6C;--1:#AA0982">200</span><span style="--0:#D6DEEB;--1:#403F53">, data: {</span><span style="--0:#7FDBCA;--1:#096E72">...</span><span style="--0:#D6DEEB;--1:#403F53">} }</span></div></div><div class="ec-line"><div class="code">
-</div></div><div class="ec-line"><div class="code"><span style="--0:#919F9F;--1:#5D6376">// Error</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">{ success: </span><span style="--0:#FF6A83;--1:#A24848">false</span><span style="--0:#D6DEEB;--1:#403F53">, code: </span><span style="--0:#F78C6C;--1:#AA0982">400</span><span style="--0:#D6DEEB;--1:#403F53">, error: </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#984E4D">Datos inválidos o incompletos</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53"> }</span></div></div></code></pre><div class="copy"><button title="Copy to clipboard" data-copied="Copied!" data-code="// Success{ success: true, code: 200, data: {...} }// Error{ success: false, code: 400, error: &#x22;Datos inválidos o incompletos&#x22; }"><div></div></button></div></figure></div>
-<p><strong>Abstracciones:</strong></p>
-<ul>
-<li><code dir="auto">STATUS</code>: Símbolos para estados (<code dir="auto">STATUS.SUCCESS</code>, <code dir="auto">STATUS.NOT_FOUND</code>)</li>
-<li><code dir="auto">HTTP_MAP</code>: Mapeo de símbolos a códigos numéricos HTTP</li>
-<li><code dir="auto">ERROR_MESSAGES</code>: Mensajes normalizados, evita magic strings</li>
-</ul>
-<hr>
-<div class="sl-heading-wrapper level-h2"><h2 id="persistencia-firebase-firestore">Persistencia: Firebase Firestore</h2><a class="sl-anchor-link" href="#persistencia-firebase-firestore"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Persistencia: Firebase Firestore”</span></a></div>
-<div class="sl-heading-wrapper level-h3"><h3 id="características">Características</h3><a class="sl-anchor-link" href="#características"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Características”</span></a></div>
-<ul>
-<li><strong>NoSQL documental</strong>: Colecciones de documentos con esquema flexible</li>
-<li><strong>Queries indexadas</strong>: <code dir="auto">where()</code>, <code dir="auto">orderBy()</code>, <code dir="auto">limit()</code> - no son SQL</li>
-<li><strong>Sin servidor propio</strong>: Managed service, escalado automático</li>
-<li><strong>Limitaciones</strong>: Joins inexistentes, queries complejas requieren denormalización</li>
-</ul>
-<div class="sl-heading-wrapper level-h3"><h3 id="diferencias-con-mongodb">Diferencias con MongoDB</h3><a class="sl-anchor-link" href="#diferencias-con-mongodb"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Diferencias con MongoDB”</span></a></div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>Aspecto</th><th>Firestore</th><th>MongoDB</th></tr></thead><tbody><tr><td>Formato</td><td>JSON nativo</td><td>BSON (Binary JSON)</td></tr><tr><td>Hosting</td><td>Managed (GCP)</td><td>Self-hosted / Atlas</td></tr><tr><td>Queries</td><td>Limitadas, indexadas automáticamente</td><td>Agregaciones complejas, pipelines</td></tr><tr><td>Transacciones</td><td>Soportadas (ACID en documentos relacionados)</td><td>Soportadas (ACID multi-documento)</td></tr></tbody></table>
-<div class="sl-heading-wrapper level-h3"><h3 id="estructura-actual">Estructura Actual</h3><a class="sl-anchor-link" href="#estructura-actual"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Estructura Actual”</span></a></div>
-<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">users/</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">  </span></span><span style="--0:#d6deeb;--1:#403f53">└─ {userId}</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">      </span></span><span style="--0:#d6deeb;--1:#403f53">├─ username: string</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">      </span></span><span style="--0:#d6deeb;--1:#403f53">└─ password: string (⚠️ plaintext, solo demo)</span></div></div><div class="ec-line"><div class="code">
-</div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">products/</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">  </span></span><span style="--0:#d6deeb;--1:#403f53">└─ {productId}</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">      </span></span><span style="--0:#d6deeb;--1:#403f53">├─ id: number (internal autoincrement)</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">      </span></span><span style="--0:#d6deeb;--1:#403f53">├─ name: string</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">      </span></span><span style="--0:#d6deeb;--1:#403f53">├─ price: number</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">      </span></span><span style="--0:#d6deeb;--1:#403f53">└─ categories: array&#x3C;string></span></div></div></code></pre><div class="copy"><button title="Copy to clipboard" data-copied="Copied!" data-code="users/  └─ {userId}      ├─ username: string      └─ password: string (⚠️ plaintext, solo demo)products/  └─ {productId}      ├─ id: number (internal autoincrement)      ├─ name: string      ├─ price: number      └─ categories: array<string>"><div></div></button></div></figure></div>
-<div class="sl-heading-wrapper level-h3"><h3 id="id-management">ID Management</h3><a class="sl-anchor-link" href="#id-management"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “ID Management”</span></a></div>
-<p><strong>Problema conocido</strong>: Race conditions en <code dir="auto">createProduct()</code> al obtener <code dir="auto">lastId</code> de forma no transaccional.</p>
-<p><strong>Solución actual</strong>: Pragmática, suficiente para carga baja/media.</p>
-<p><a href="https://firebase.google.com/docs/firestore/manage-data/transactions"><strong>Solución robusta</strong>: Usar transacciones de Firestore</a></p>
-<hr>
-<div class="sl-heading-wrapper level-h2"><h2 id="seguridad-y-limitaciones">Seguridad y Limitaciones</h2><a class="sl-anchor-link" href="#seguridad-y-limitaciones"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Seguridad y Limitaciones”</span></a></div>
-<div class="sl-heading-wrapper level-h3"><h3 id="implementado">Implementado</h3><a class="sl-anchor-link" href="#implementado"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Implementado”</span></a></div>
-<ul>
-<li>✅ JWT con expiración configurable</li>
-<li>✅ Middleware de autenticación en rutas protegidas</li>
-<li>✅ CORS configurado para dominios específicos</li>
-<li>✅ Validación de payloads en controllers</li>
-<li>✅ Rate limiting vía Vercel WAF</li>
-</ul>
-<div class="sl-heading-wrapper level-h3"><h3 id="pendiente-production-readiness">Pendiente (Production Readiness)</h3><a class="sl-anchor-link" href="#pendiente-production-readiness"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Pendiente (Production Readiness)”</span></a></div>
-<ul>
-<li>⚠️ <strong>Passwords en plaintext</strong>: Implementar bcrypt/argon2 hashing</li>
-<li>⚠️ <strong>Validación limitada</strong>: Faltan límites de longitud, sanitización XSS</li>
-<li>⚠️ <strong>Sin logging estructurado</strong>: console.error no escala en producción</li>
-<li>⚠️ <strong>Sin tests automatizados</strong>: Cobertura manual con Postman/HTTP files</li>
-</ul>
-<hr>
-<div class="sl-heading-wrapper level-h2"><h2 id="escalabilidad-y-evolución">Escalabilidad y Evolución</h2><a class="sl-anchor-link" href="#escalabilidad-y-evolución"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Escalabilidad y Evolución”</span></a></div>
-<div class="sl-heading-wrapper level-h3"><h3 id="ventajas-de-la-arquitectura-actual">Ventajas de la Arquitectura Actual</h3><a class="sl-anchor-link" href="#ventajas-de-la-arquitectura-actual"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Ventajas de la Arquitectura Actual”</span></a></div>
-<p><strong>Desacoplamiento horizontal</strong>: Agregar nuevas entidades (orders, categories) solo requiere nuevo módulo en <code dir="auto">api/</code>, sin modificar infraestructura existente.</p>
-<p><strong>Migración de persistencia</strong>: Cambiar Firebase por PostgreSQL/MongoDB solo afecta la capa de Models. Services apenas mutan y Controllers permanecen intactos gracias a la abstracción de <code dir="auto">result</code> objects.</p>
-<p><strong>Testing incremental</strong>: Cada capa puede testearse independientemente (unit tests en Services, integration tests en Controllers, E2E en Routes).</p>
-<div class="sl-heading-wrapper level-h3"><h3 id="próximos-pasos-arquitectónicos">Próximos Pasos Arquitectónicos</h3><a class="sl-anchor-link" href="#próximos-pasos-arquitectónicos"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Próximos Pasos Arquitectónicos”</span></a></div>
-<p>En un nuevo repositorio, o como extensión escalable de este mismo:</p>
-<ol>
-<li><strong>Transacciones en Models</strong>: Resolver race conditions con Firestore transactions</li>
-<li><strong>Middleware de validación</strong>: Extraer validaciones repetitivas a middleware reutilizable con Joi/Zod</li>
-<li><strong>Error types personalizados</strong>: Clases de error específicas (ValidationError, AuthError) para mejor debugging</li>
-<li><strong>Repository pattern</strong>: Abstraer queries complejas en repositorios dedicados si Firestore queries crecen</li>
-</ol>
-<hr>
-<div class="sl-heading-wrapper level-h3"><h3 id="recursos-utiles">Recursos utiles</h3><a class="sl-anchor-link" href="#recursos-utiles"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Recursos utiles”</span></a></div>
-<ul>
-<li><a href="https://firebase.google.com/docs/firestore">Firebase Firestore Docs</a></li>
-<li><a href="https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html">Clean Architecture (Uncle Bob)</a></li>
-<li><a href="https://expressjs.com/en/advanced/best-practice-performance.html">Express Best Practices</a></li>
-<li><a href="https://owasp.org/www-project-api-security/">OWASP API Security Top 10</a></li>
-</ul> </div> <footer class="sl-flex astro-uutozc4b"> <div class="meta sl-flex astro-uutozc4b">   </div> <div class="pagination-links print:hidden astro-zylujxy5" dir="ltr"> <a href="/docs/guides/introduction/" rel="prev" class="astro-zylujxy5"> <svg aria-hidden="true" class="astro-zylujxy5 astro-zyiyrzho" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg> <span class="astro-zylujxy5"> Previous <br class="astro-zylujxy5"> <span class="link-title astro-zylujxy5">Introducción</span> </span> </a>  </div>   </footer>  </div> </div>   </main> </div> </div>  </div> </div>  </body></html>
+							return {
+								hash: e,
+								open: t,
+								scroll: a?.scrollTop || 0,
+							};
+						},
+						c = (t) => {
+							try {
+								sessionStorage.setItem(o, JSON.stringify(t));
+							} catch {}
+						},
+						d = () => c(i()),
+						l = (t, e) => {
+							const s = i();
+							((s.open[e] = t), c(s));
+						};
+					n?.addEventListener('click', (t) => {
+						if (!(t.target instanceof Element)) return;
+						const e = t.target
+							.closest('summary')
+							?.closest('details');
+						if (!e) return;
+						const s = e.querySelector('sl-sidebar-restore'),
+							r = parseInt(s?.dataset.index || '');
+						isNaN(r) || l(!e.open, r);
+					});
+					addEventListener('visibilitychange', () => {
+						document.visibilityState === 'hidden' && d();
+					});
+					addEventListener('pageHide', d);
+				</script>
+				<div class="lg:sl-flex astro-zbsfwr4k">
+					<aside
+						class="right-sidebar-container print:hidden astro-zbsfwr4k"
+					>
+						<div class="right-sidebar astro-zbsfwr4k">
+							<div class="lg:sl-hidden astro-xpfjpvqg">
+								<mobile-starlight-toc
+									data-min-h="2"
+									data-max-h="3"
+									class="astro-eqe2sosc"
+									><nav
+										aria-labelledby="starlight__on-this-page--mobile"
+										class="astro-eqe2sosc"
+									>
+										<details
+											id="starlight__mobile-toc"
+											class="astro-eqe2sosc"
+										>
+											<summary
+												id="starlight__on-this-page--mobile"
+												class="sl-flex astro-eqe2sosc"
+											>
+												<span
+													class="toggle sl-flex astro-eqe2sosc"
+													>On this page<svg
+														aria-hidden="true"
+														class="caret astro-eqe2sosc astro-zyiyrzho"
+														width="16"
+														height="16"
+														viewBox="0 0 24 24"
+														fill="currentColor"
+														style="
+															--sl-icon-size: 1rem;
+														"
+													>
+														<path
+															d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"
+														/></svg></span
+												><span
+													class="display-current astro-eqe2sosc"
+												></span>
+											</summary>
+											<div
+												class="dropdown astro-eqe2sosc"
+											>
+												<ul
+													class="isMobile astro-oq2tk7jh"
+													style="--depth: 0"
+												>
+													<li
+														class="astro-oq2tk7jh"
+														style="--depth: 0"
+													>
+														<a
+															href="#_top"
+															class="astro-oq2tk7jh"
+															style="--depth: 0"
+														>
+															<span
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 0;
+																"
+																>Overview</span
+															>
+														</a>
+													</li>
+													<li
+														class="astro-oq2tk7jh"
+														style="--depth: 0"
+													>
+														<a
+															href="#principios-de-diseño"
+															class="astro-oq2tk7jh"
+															style="--depth: 0"
+														>
+															<span
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 0;
+																"
+																>Principios de
+																Diseño</span
+															>
+														</a>
+													</li>
+													<li
+														class="astro-oq2tk7jh"
+														style="--depth: 0"
+													>
+														<a
+															href="#capas-y-responsabilidades"
+															class="astro-oq2tk7jh"
+															style="--depth: 0"
+														>
+															<span
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 0;
+																"
+																>Capas y
+																Responsabilidades</span
+															>
+														</a>
+														<ul
+															class="isMobile astro-oq2tk7jh"
+															style="--depth: 1"
+														>
+															<li
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 1;
+																"
+															>
+																<a
+																	href="#detalles-por-capa"
+																	class="astro-oq2tk7jh"
+																	style="
+																		--depth: 1;
+																	"
+																>
+																	<span
+																		class="astro-oq2tk7jh"
+																		style="
+																			--depth: 1;
+																		"
+																		>Detalles
+																		por
+																		Capa</span
+																	>
+																</a>
+															</li>
+														</ul>
+													</li>
+													<li
+														class="astro-oq2tk7jh"
+														style="--depth: 0"
+													>
+														<a
+															href="#flujo-de-datos"
+															class="astro-oq2tk7jh"
+															style="--depth: 0"
+														>
+															<span
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 0;
+																"
+																>Flujo de
+																Datos</span
+															>
+														</a>
+													</li>
+													<li
+														class="astro-oq2tk7jh"
+														style="--depth: 0"
+													>
+														<a
+															href="#convenciones-de-código"
+															class="astro-oq2tk7jh"
+															style="--depth: 0"
+														>
+															<span
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 0;
+																"
+																>Convenciones de
+																Código</span
+															>
+														</a>
+														<ul
+															class="isMobile astro-oq2tk7jh"
+															style="--depth: 1"
+														>
+															<li
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 1;
+																"
+															>
+																<a
+																	href="#controllers-y-services-namespace-pattern"
+																	class="astro-oq2tk7jh"
+																	style="
+																		--depth: 1;
+																	"
+																>
+																	<span
+																		class="astro-oq2tk7jh"
+																		style="
+																			--depth: 1;
+																		"
+																		>Controllers
+																		y
+																		Services:
+																		Namespace
+																		Pattern</span
+																	>
+																</a>
+															</li>
+															<li
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 1;
+																"
+															>
+																<a
+																	href="#normalización-de-respuestas"
+																	class="astro-oq2tk7jh"
+																	style="
+																		--depth: 1;
+																	"
+																>
+																	<span
+																		class="astro-oq2tk7jh"
+																		style="
+																			--depth: 1;
+																		"
+																		>Normalización
+																		de
+																		Respuestas</span
+																	>
+																</a>
+															</li>
+														</ul>
+													</li>
+													<li
+														class="astro-oq2tk7jh"
+														style="--depth: 0"
+													>
+														<a
+															href="#persistencia-firebase-firestore"
+															class="astro-oq2tk7jh"
+															style="--depth: 0"
+														>
+															<span
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 0;
+																"
+																>Persistencia:
+																Firebase
+																Firestore</span
+															>
+														</a>
+														<ul
+															class="isMobile astro-oq2tk7jh"
+															style="--depth: 1"
+														>
+															<li
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 1;
+																"
+															>
+																<a
+																	href="#características"
+																	class="astro-oq2tk7jh"
+																	style="
+																		--depth: 1;
+																	"
+																>
+																	<span
+																		class="astro-oq2tk7jh"
+																		style="
+																			--depth: 1;
+																		"
+																		>Características</span
+																	>
+																</a>
+															</li>
+															<li
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 1;
+																"
+															>
+																<a
+																	href="#diferencias-con-mongodb"
+																	class="astro-oq2tk7jh"
+																	style="
+																		--depth: 1;
+																	"
+																>
+																	<span
+																		class="astro-oq2tk7jh"
+																		style="
+																			--depth: 1;
+																		"
+																		>Diferencias
+																		con
+																		MongoDB</span
+																	>
+																</a>
+															</li>
+															<li
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 1;
+																"
+															>
+																<a
+																	href="#estructura-actual"
+																	class="astro-oq2tk7jh"
+																	style="
+																		--depth: 1;
+																	"
+																>
+																	<span
+																		class="astro-oq2tk7jh"
+																		style="
+																			--depth: 1;
+																		"
+																		>Estructura
+																		Actual</span
+																	>
+																</a>
+															</li>
+															<li
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 1;
+																"
+															>
+																<a
+																	href="#id-management"
+																	class="astro-oq2tk7jh"
+																	style="
+																		--depth: 1;
+																	"
+																>
+																	<span
+																		class="astro-oq2tk7jh"
+																		style="
+																			--depth: 1;
+																		"
+																		>ID
+																		Management</span
+																	>
+																</a>
+															</li>
+														</ul>
+													</li>
+													<li
+														class="astro-oq2tk7jh"
+														style="--depth: 0"
+													>
+														<a
+															href="#seguridad-y-limitaciones"
+															class="astro-oq2tk7jh"
+															style="--depth: 0"
+														>
+															<span
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 0;
+																"
+																>Seguridad y
+																Limitaciones</span
+															>
+														</a>
+														<ul
+															class="isMobile astro-oq2tk7jh"
+															style="--depth: 1"
+														>
+															<li
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 1;
+																"
+															>
+																<a
+																	href="#implementado"
+																	class="astro-oq2tk7jh"
+																	style="
+																		--depth: 1;
+																	"
+																>
+																	<span
+																		class="astro-oq2tk7jh"
+																		style="
+																			--depth: 1;
+																		"
+																		>Implementado</span
+																	>
+																</a>
+															</li>
+															<li
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 1;
+																"
+															>
+																<a
+																	href="#pendiente-production-readiness"
+																	class="astro-oq2tk7jh"
+																	style="
+																		--depth: 1;
+																	"
+																>
+																	<span
+																		class="astro-oq2tk7jh"
+																		style="
+																			--depth: 1;
+																		"
+																		>Pendiente
+																		(Production
+																		Readiness)</span
+																	>
+																</a>
+															</li>
+														</ul>
+													</li>
+													<li
+														class="astro-oq2tk7jh"
+														style="--depth: 0"
+													>
+														<a
+															href="#escalabilidad-y-evolución"
+															class="astro-oq2tk7jh"
+															style="--depth: 0"
+														>
+															<span
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 0;
+																"
+																>Escalabilidad y
+																Evolución</span
+															>
+														</a>
+														<ul
+															class="isMobile astro-oq2tk7jh"
+															style="--depth: 1"
+														>
+															<li
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 1;
+																"
+															>
+																<a
+																	href="#ventajas-de-la-arquitectura-actual"
+																	class="astro-oq2tk7jh"
+																	style="
+																		--depth: 1;
+																	"
+																>
+																	<span
+																		class="astro-oq2tk7jh"
+																		style="
+																			--depth: 1;
+																		"
+																		>Ventajas
+																		de la
+																		Arquitectura
+																		Actual</span
+																	>
+																</a>
+															</li>
+															<li
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 1;
+																"
+															>
+																<a
+																	href="#próximos-pasos-arquitectónicos"
+																	class="astro-oq2tk7jh"
+																	style="
+																		--depth: 1;
+																	"
+																>
+																	<span
+																		class="astro-oq2tk7jh"
+																		style="
+																			--depth: 1;
+																		"
+																		>Próximos
+																		Pasos
+																		Arquitectónicos</span
+																	>
+																</a>
+															</li>
+															<li
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 1;
+																"
+															>
+																<a
+																	href="#recursos-utiles"
+																	class="astro-oq2tk7jh"
+																	style="
+																		--depth: 1;
+																	"
+																>
+																	<span
+																		class="astro-oq2tk7jh"
+																		style="
+																			--depth: 1;
+																		"
+																		>Recursos
+																		utiles</span
+																	>
+																</a>
+															</li>
+														</ul>
+													</li>
+												</ul>
+											</div>
+										</details>
+									</nav></mobile-starlight-toc
+								>
+								<script
+									type="module"
+									src="/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.C181hMzK.js"
+								></script>
+							</div>
+							<div
+								class="right-sidebar-panel sl-hidden lg:sl-block astro-xpfjpvqg"
+							>
+								<div class="sl-container astro-xpfjpvqg">
+									<starlight-toc data-min-h="2" data-max-h="3"
+										><nav
+											aria-labelledby="starlight__on-this-page"
+										>
+											<h2 id="starlight__on-this-page">
+												On this page
+											</h2>
+											<ul
+												class="astro-oq2tk7jh"
+												style="--depth: 0"
+											>
+												<li
+													class="astro-oq2tk7jh"
+													style="--depth: 0"
+												>
+													<a
+														href="#_top"
+														class="astro-oq2tk7jh"
+														style="--depth: 0"
+													>
+														<span
+															class="astro-oq2tk7jh"
+															style="--depth: 0"
+															>Overview</span
+														>
+													</a>
+												</li>
+												<li
+													class="astro-oq2tk7jh"
+													style="--depth: 0"
+												>
+													<a
+														href="#principios-de-diseño"
+														class="astro-oq2tk7jh"
+														style="--depth: 0"
+													>
+														<span
+															class="astro-oq2tk7jh"
+															style="--depth: 0"
+															>Principios de
+															Diseño</span
+														>
+													</a>
+												</li>
+												<li
+													class="astro-oq2tk7jh"
+													style="--depth: 0"
+												>
+													<a
+														href="#capas-y-responsabilidades"
+														class="astro-oq2tk7jh"
+														style="--depth: 0"
+													>
+														<span
+															class="astro-oq2tk7jh"
+															style="--depth: 0"
+															>Capas y
+															Responsabilidades</span
+														>
+													</a>
+													<ul
+														class="astro-oq2tk7jh"
+														style="--depth: 1"
+													>
+														<li
+															class="astro-oq2tk7jh"
+															style="--depth: 1"
+														>
+															<a
+																href="#detalles-por-capa"
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 1;
+																"
+															>
+																<span
+																	class="astro-oq2tk7jh"
+																	style="
+																		--depth: 1;
+																	"
+																	>Detalles
+																	por
+																	Capa</span
+																>
+															</a>
+														</li>
+													</ul>
+												</li>
+												<li
+													class="astro-oq2tk7jh"
+													style="--depth: 0"
+												>
+													<a
+														href="#flujo-de-datos"
+														class="astro-oq2tk7jh"
+														style="--depth: 0"
+													>
+														<span
+															class="astro-oq2tk7jh"
+															style="--depth: 0"
+															>Flujo de
+															Datos</span
+														>
+													</a>
+												</li>
+												<li
+													class="astro-oq2tk7jh"
+													style="--depth: 0"
+												>
+													<a
+														href="#convenciones-de-código"
+														class="astro-oq2tk7jh"
+														style="--depth: 0"
+													>
+														<span
+															class="astro-oq2tk7jh"
+															style="--depth: 0"
+															>Convenciones de
+															Código</span
+														>
+													</a>
+													<ul
+														class="astro-oq2tk7jh"
+														style="--depth: 1"
+													>
+														<li
+															class="astro-oq2tk7jh"
+															style="--depth: 1"
+														>
+															<a
+																href="#controllers-y-services-namespace-pattern"
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 1;
+																"
+															>
+																<span
+																	class="astro-oq2tk7jh"
+																	style="
+																		--depth: 1;
+																	"
+																	>Controllers
+																	y Services:
+																	Namespace
+																	Pattern</span
+																>
+															</a>
+														</li>
+														<li
+															class="astro-oq2tk7jh"
+															style="--depth: 1"
+														>
+															<a
+																href="#normalización-de-respuestas"
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 1;
+																"
+															>
+																<span
+																	class="astro-oq2tk7jh"
+																	style="
+																		--depth: 1;
+																	"
+																	>Normalización
+																	de
+																	Respuestas</span
+																>
+															</a>
+														</li>
+													</ul>
+												</li>
+												<li
+													class="astro-oq2tk7jh"
+													style="--depth: 0"
+												>
+													<a
+														href="#persistencia-firebase-firestore"
+														class="astro-oq2tk7jh"
+														style="--depth: 0"
+													>
+														<span
+															class="astro-oq2tk7jh"
+															style="--depth: 0"
+															>Persistencia:
+															Firebase
+															Firestore</span
+														>
+													</a>
+													<ul
+														class="astro-oq2tk7jh"
+														style="--depth: 1"
+													>
+														<li
+															class="astro-oq2tk7jh"
+															style="--depth: 1"
+														>
+															<a
+																href="#características"
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 1;
+																"
+															>
+																<span
+																	class="astro-oq2tk7jh"
+																	style="
+																		--depth: 1;
+																	"
+																	>Características</span
+																>
+															</a>
+														</li>
+														<li
+															class="astro-oq2tk7jh"
+															style="--depth: 1"
+														>
+															<a
+																href="#diferencias-con-mongodb"
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 1;
+																"
+															>
+																<span
+																	class="astro-oq2tk7jh"
+																	style="
+																		--depth: 1;
+																	"
+																	>Diferencias
+																	con
+																	MongoDB</span
+																>
+															</a>
+														</li>
+														<li
+															class="astro-oq2tk7jh"
+															style="--depth: 1"
+														>
+															<a
+																href="#estructura-actual"
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 1;
+																"
+															>
+																<span
+																	class="astro-oq2tk7jh"
+																	style="
+																		--depth: 1;
+																	"
+																	>Estructura
+																	Actual</span
+																>
+															</a>
+														</li>
+														<li
+															class="astro-oq2tk7jh"
+															style="--depth: 1"
+														>
+															<a
+																href="#id-management"
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 1;
+																"
+															>
+																<span
+																	class="astro-oq2tk7jh"
+																	style="
+																		--depth: 1;
+																	"
+																	>ID
+																	Management</span
+																>
+															</a>
+														</li>
+													</ul>
+												</li>
+												<li
+													class="astro-oq2tk7jh"
+													style="--depth: 0"
+												>
+													<a
+														href="#seguridad-y-limitaciones"
+														class="astro-oq2tk7jh"
+														style="--depth: 0"
+													>
+														<span
+															class="astro-oq2tk7jh"
+															style="--depth: 0"
+															>Seguridad y
+															Limitaciones</span
+														>
+													</a>
+													<ul
+														class="astro-oq2tk7jh"
+														style="--depth: 1"
+													>
+														<li
+															class="astro-oq2tk7jh"
+															style="--depth: 1"
+														>
+															<a
+																href="#implementado"
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 1;
+																"
+															>
+																<span
+																	class="astro-oq2tk7jh"
+																	style="
+																		--depth: 1;
+																	"
+																	>Implementado</span
+																>
+															</a>
+														</li>
+														<li
+															class="astro-oq2tk7jh"
+															style="--depth: 1"
+														>
+															<a
+																href="#pendiente-production-readiness"
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 1;
+																"
+															>
+																<span
+																	class="astro-oq2tk7jh"
+																	style="
+																		--depth: 1;
+																	"
+																	>Pendiente
+																	(Production
+																	Readiness)</span
+																>
+															</a>
+														</li>
+													</ul>
+												</li>
+												<li
+													class="astro-oq2tk7jh"
+													style="--depth: 0"
+												>
+													<a
+														href="#escalabilidad-y-evolución"
+														class="astro-oq2tk7jh"
+														style="--depth: 0"
+													>
+														<span
+															class="astro-oq2tk7jh"
+															style="--depth: 0"
+															>Escalabilidad y
+															Evolución</span
+														>
+													</a>
+													<ul
+														class="astro-oq2tk7jh"
+														style="--depth: 1"
+													>
+														<li
+															class="astro-oq2tk7jh"
+															style="--depth: 1"
+														>
+															<a
+																href="#ventajas-de-la-arquitectura-actual"
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 1;
+																"
+															>
+																<span
+																	class="astro-oq2tk7jh"
+																	style="
+																		--depth: 1;
+																	"
+																	>Ventajas de
+																	la
+																	Arquitectura
+																	Actual</span
+																>
+															</a>
+														</li>
+														<li
+															class="astro-oq2tk7jh"
+															style="--depth: 1"
+														>
+															<a
+																href="#próximos-pasos-arquitectónicos"
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 1;
+																"
+															>
+																<span
+																	class="astro-oq2tk7jh"
+																	style="
+																		--depth: 1;
+																	"
+																	>Próximos
+																	Pasos
+																	Arquitectónicos</span
+																>
+															</a>
+														</li>
+														<li
+															class="astro-oq2tk7jh"
+															style="--depth: 1"
+														>
+															<a
+																href="#recursos-utiles"
+																class="astro-oq2tk7jh"
+																style="
+																	--depth: 1;
+																"
+															>
+																<span
+																	class="astro-oq2tk7jh"
+																	style="
+																		--depth: 1;
+																	"
+																	>Recursos
+																	utiles</span
+																>
+															</a>
+														</li>
+													</ul>
+												</li>
+											</ul>
+										</nav></starlight-toc
+									>
+									<script
+										type="module"
+										src="/_astro/TableOfContents.astro_astro_type_script_index_0_lang.CKWWgpjV.js"
+									></script>
+								</div>
+							</div>
+						</div>
+					</aside>
+					<div class="main-pane astro-zbsfwr4k">
+						<main
+							data-pagefind-body
+							class="astro-mjs56nzy"
+							lang="en"
+							dir="ltr"
+						>
+							<div class="content-panel astro-ny2srbsg">
+								<div class="sl-container astro-ny2srbsg">
+									<h1 id="_top" class="astro-efjibi6s">
+										Arquitectura
+									</h1>
+								</div>
+							</div>
+							<div class="content-panel astro-ny2srbsg">
+								<div class="sl-container astro-ny2srbsg">
+									<div class="sl-markdown-content">
+										<div
+											class="sl-heading-wrapper level-h2"
+										>
+											<h2 id="principios-de-diseño">
+												Principios de Diseño
+											</h2>
+											<a
+												class="sl-anchor-link"
+												href="#principios-de-diseño"
+												><span
+													aria-hidden="true"
+													class="sl-anchor-icon"
+													><svg
+														width="16"
+														height="16"
+														viewBox="0 0 24 24"
+													>
+														<path
+															fill="currentcolor"
+															d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"
+														></path></svg></span
+												><span class="sr-only"
+													>Section titled “Principios
+													de Diseño”</span
+												></a
+											>
+										</div>
+										<p>
+											Esta API sigue una arquitectura en
+											capas inspirada en
+											<strong
+												>‘Clean Architecture’</strong
+											>
+											y principios UNIX: modularidad,
+											separación de responsabilidades, y
+											componentes desacoplados que pueden
+											evolucionar independientemente.
+										</p>
+										<blockquote>
+											<p>
+												<strong
+													>Nota Tecnica
+													Realista</strong
+												>: Esta API realmente implementa
+												<a
+													href="https://www.geeksforgeeks.org/computer-networks/layered-architecture-in-computer-networks/"
+													><strong
+														>Layered Architecture
+														(3-Tier)</strong
+													></a
+												>
+												con
+												<a
+													href="https://awesome-architecture.com/design-patterns/transaction-script-pattern/"
+													>Transaction Script
+													Pattern</a
+												>, separando presentación
+												(Routes/Controllers), lógica de
+												negocio (Services), y acceso a
+												datos (Models) en capas
+												horizontales desacopladas.
+											</p>
+										</blockquote>
+										<p><strong>Filosofía core:</strong></p>
+										<ul>
+											<li>
+												<strong>KISS</strong>:
+												Simplicidad sobre abstracción
+												prematura
+											</li>
+											<li>
+												<strong>DRY</strong>:
+												Normalización de códigos HTTP,
+												mensajes de error y lógica de
+												negocio
+											</li>
+											<li>
+												<strong
+													>Separation of
+													Concerns</strong
+												>: Cada capa tiene una
+												responsabilidad única y bien
+												definida
+											</li>
+											<li>
+												<strong>Dependency Flow</strong
+												>: Las dependencias fluyen hacia
+												adentro (Routes → Controllers →
+												Services → Models)
+											</li>
+										</ul>
+										<hr />
+										<div
+											class="sl-heading-wrapper level-h2"
+										>
+											<h2 id="capas-y-responsabilidades">
+												Capas y Responsabilidades
+											</h2>
+											<a
+												class="sl-anchor-link"
+												href="#capas-y-responsabilidades"
+												><span
+													aria-hidden="true"
+													class="sl-anchor-icon"
+													><svg
+														width="16"
+														height="16"
+														viewBox="0 0 24 24"
+													>
+														<path
+															fill="currentcolor"
+															d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"
+														></path></svg></span
+												><span class="sr-only"
+													>Section titled “Capas y
+													Responsabilidades”</span
+												></a
+											>
+										</div>
+
+										<table>
+											<thead>
+												<tr>
+													<th>Capa</th>
+													<th>Responsabilidad</th>
+													<th>Maneja Estado</th>
+													<th>Depende de</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>
+														<strong>Routes</strong>
+													</td>
+													<td>
+														Define endpoints HTTP,
+														aplica middlewares,
+														delega a controller
+													</td>
+													<td>No</td>
+													<td>Controllers</td>
+												</tr>
+												<tr>
+													<td>
+														<strong
+															>Controllers</strong
+														>
+													</td>
+													<td>
+														Valida request, coordina
+														service, serializa
+														response HTTP
+													</td>
+													<td>No</td>
+													<td>Services</td>
+												</tr>
+												<tr>
+													<td>
+														<strong
+															>Services</strong
+														>
+													</td>
+													<td>
+														Lógica de dominio,
+														orquestación,
+														transformaciones de
+														datos
+													</td>
+													<td>Opcional</td>
+													<td>Models</td>
+												</tr>
+												<tr>
+													<td>
+														<strong>Models</strong>
+													</td>
+													<td>
+														Acceso directo a
+														persistencia (queries,
+														CRUD atómico)
+													</td>
+													<td>Opcional</td>
+													<td>Firebase/DB</td>
+												</tr>
+											</tbody>
+										</table>
+										<div
+											class="sl-heading-wrapper level-h3"
+										>
+											<h3 id="detalles-por-capa">
+												Detalles por Capa
+											</h3>
+											<a
+												class="sl-anchor-link"
+												href="#detalles-por-capa"
+												><span
+													aria-hidden="true"
+													class="sl-anchor-icon"
+													><svg
+														width="16"
+														height="16"
+														viewBox="0 0 24 24"
+													>
+														<path
+															fill="currentcolor"
+															d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"
+														></path></svg></span
+												><span class="sr-only"
+													>Section titled “Detalles
+													por Capa”</span
+												></a
+											>
+										</div>
+										<p>
+											<strong>Routes</strong>: Punto de
+											entrada HTTP. Registra endpoints,
+											aplica middlewares (auth, CORS), y
+											delega inmediatamente al
+											controlador. No contiene lógica de
+											negocio.
+										</p>
+										<p>
+											<strong>Controllers</strong>: Capa
+											de coordinación. Valida payloads y
+											parámetros de entrada, invoca el
+											servicio apropiado, captura errores
+											y delega al error handler, serializa
+											respuestas usando
+											<code dir="auto"
+												>sendResponse()</code
+											>
+											con códigos HTTP normalizados.
+										</p>
+										<p>
+											<strong>Services</strong>: Core de
+											la lógica de negocio. Orquesta
+											operaciones complejas (crear
+											producto con ID autoincrementable),
+											transforma datos entre capas,
+											gestiona reglas de dominio
+											(validación de credenciales, demo
+											user), retorna objetos de estado
+											estandarizados (<code dir="auto"
+												>{success, status, data}</code
+											>).
+										</p>
+										<p>
+											<strong>Models</strong>: Capa de
+											persistencia pura. Ejecuta queries
+											directas a Firebase (addDoc,
+											getDocs, updateDoc, deleteDoc),
+											maneja errores de conexión/query,
+											retorna datos crudos o undefined. No
+											contiene lógica de negocio.
+										</p>
+										<hr />
+										<div
+											class="sl-heading-wrapper level-h2"
+										>
+											<h2 id="flujo-de-datos">
+												Flujo de Datos
+											</h2>
+											<a
+												class="sl-anchor-link"
+												href="#flujo-de-datos"
+												><span
+													aria-hidden="true"
+													class="sl-anchor-icon"
+													><svg
+														width="16"
+														height="16"
+														viewBox="0 0 24 24"
+													>
+														<path
+															fill="currentcolor"
+															d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"
+														></path></svg></span
+												><span class="sr-only"
+													>Section titled “Flujo de
+													Datos”</span
+												></a
+											>
+										</div>
+										<picture>
+											<source
+												srcset="
+													/_astro/flow-dark.DgQ6MBNG_1ifGuS.svg
+												"
+												type="image/svg+xml"
+											/>
+											<img
+												src="/_astro/flow-dark.DgQ6MBNG_1ifGuS.svg"
+												alt="Architecture Flow"
+												loading="lazy"
+												decoding="async"
+												fetchpriority="auto"
+												width="1800"
+												height="463"
+											/>
+										</picture>
+										<p><strong>Request Flow:</strong></p>
+										<div class="expressive-code">
+											<link
+												rel="stylesheet"
+												href="/_astro/ec.v4551.css"
+											/>
+											<script
+												type="module"
+												src="/_astro/ec.p1z7b.js"
+											></script>
+											<figure class="frame not-content">
+												<figcaption
+													class="header"
+												></figcaption>
+												<pre
+													data-language="plaintext"
+												><code><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">HTTP Request → Route → Controller → Service → Model → Firebase</span></div></div></code></pre>
+												<div class="copy">
+													<button
+														title="Copy to clipboard"
+														data-copied="Copied!"
+														data-code="HTTP Request → Route → Controller → Service → Model → Firebase"
+													>
+														<div></div>
+													</button>
+												</div>
+											</figure>
+										</div>
+										<p><strong>Response Flow:</strong></p>
+										<div class="expressive-code">
+											<figure class="frame not-content">
+												<figcaption
+													class="header"
+												></figcaption>
+												<pre
+													data-language="plaintext"
+												><code><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">Firebase → Model (data/throw) → Service (result object) → Controller (HTTP serialization) → Client</span></div></div></code></pre>
+												<div class="copy">
+													<button
+														title="Copy to clipboard"
+														data-copied="Copied!"
+														data-code="Firebase → Model (data/throw) → Service (result object) → Controller (HTTP serialization) → Client"
+													>
+														<div></div>
+													</button>
+												</div>
+											</figure>
+										</div>
+										<p><strong>Error Flow:</strong></p>
+										<div class="expressive-code">
+											<figure class="frame not-content">
+												<figcaption
+													class="header"
+												></figcaption>
+												<pre
+													data-language="plaintext"
+												><code><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">Model (throw) → Service (propagate) → Controller (next(err)) → errorHandler → HTTP Error Response</span></div></div></code></pre>
+												<div class="copy">
+													<button
+														title="Copy to clipboard"
+														data-copied="Copied!"
+														data-code="Model (throw) → Service (propagate) → Controller (next(err)) → errorHandler → HTTP Error Response"
+													>
+														<div></div>
+													</button>
+												</div>
+											</figure>
+										</div>
+										<hr />
+										<div
+											class="sl-heading-wrapper level-h2"
+										>
+											<h2 id="convenciones-de-código">
+												Convenciones de Código
+											</h2>
+											<a
+												class="sl-anchor-link"
+												href="#convenciones-de-código"
+												><span
+													aria-hidden="true"
+													class="sl-anchor-icon"
+													><svg
+														width="16"
+														height="16"
+														viewBox="0 0 24 24"
+													>
+														<path
+															fill="currentcolor"
+															d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"
+														></path></svg></span
+												><span class="sr-only"
+													>Section titled
+													“Convenciones de
+													Código”</span
+												></a
+											>
+										</div>
+										<div
+											class="sl-heading-wrapper level-h3"
+										>
+											<h3
+												id="controllers-y-services-namespace-pattern"
+											>
+												Controllers y Services:
+												Namespace Pattern
+											</h3>
+											<a
+												class="sl-anchor-link"
+												href="#controllers-y-services-namespace-pattern"
+												><span
+													aria-hidden="true"
+													class="sl-anchor-icon"
+													><svg
+														width="16"
+														height="16"
+														viewBox="0 0 24 24"
+													>
+														<path
+															fill="currentcolor"
+															d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"
+														></path></svg></span
+												><span class="sr-only"
+													>Section titled “Controllers
+													y Services: Namespace
+													Pattern”</span
+												></a
+											>
+										</div>
+										<p>
+											Funciones puras exportadas como
+											namespace. Sin clases, sin estado
+											compartido.
+										</p>
+										<p>
+											<strong
+												>Nomenclatura estándar
+												CRUD:</strong
+											>
+										</p>
+										<ul>
+											<li>
+												<code dir="auto"
+													>create(req, res,
+													next)</code
+												>
+												- POST
+											</li>
+											<li>
+												<code dir="auto"
+													>getAll(req, res,
+													next)</code
+												>
+												- GET collection
+											</li>
+											<li>
+												<code dir="auto"
+													>getById(req, res,
+													next)</code
+												>
+												- GET resource
+											</li>
+											<li>
+												<code dir="auto"
+													>update(req, res,
+													next)</code
+												>
+												- PATCH (partial update)
+											</li>
+											<li>
+												<code dir="auto"
+													>remove(req, res,
+													next)</code
+												>
+												- DELETE (evita shadowing de
+												keyword
+												<code dir="auto">delete</code>)
+											</li>
+										</ul>
+										<p><strong>Importación:</strong></p>
+										<div class="expressive-code">
+											<figure class="frame not-content">
+												<figcaption
+													class="header"
+												></figcaption>
+												<pre
+													data-language="js"
+												><code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8844AE">import</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">*</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8844AE">as</span><span style="--0:#D6DEEB;--1:#403F53"> productController </span><span style="--0:#C792EA;--1:#8844AE">from</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#ECC48D;--1:#984E4D">#api/products/product.controller.js</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#D6DEEB;--1:#403F53">;</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#7FDBCA;--1:#096E72">router</span><span style="--0:#C792EA;--1:#8844AE">.</span><span style="--0:#82AAFF;--1:#3B61B0">post</span><span style="--0:#D6DEEB;--1:#403F53">(</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#ECC48D;--1:#984E4D">/create</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--1:#403F53"><span style="--0:#D6DEEB">, </span><span style="--0:#D7DBE0">auth</span><span style="--0:#D6DEEB">, </span></span><span style="--0:#7FDBCA;--1:#096E72">productController</span><span style="--0:#C792EA;--1:#8844AE">.</span><span style="--0:#7FDBCA;--1:#096E72">create</span><span style="--0:#D6DEEB;--1:#403F53">);</span></div></div></code></pre>
+												<div class="copy">
+													<button
+														title="Copy to clipboard"
+														data-copied="Copied!"
+														data-code="import * as productController from &#x27;#api/products/product.controller.js&#x27;;router.post(&#x27;/create&#x27;, auth, productController.create);"
+													>
+														<div></div>
+													</button>
+												</div>
+											</figure>
+										</div>
+										<div
+											class="sl-heading-wrapper level-h3"
+										>
+											<h3
+												id="normalización-de-respuestas"
+											>
+												Normalización de Respuestas
+											</h3>
+											<a
+												class="sl-anchor-link"
+												href="#normalización-de-respuestas"
+												><span
+													aria-hidden="true"
+													class="sl-anchor-icon"
+													><svg
+														width="16"
+														height="16"
+														viewBox="0 0 24 24"
+													>
+														<path
+															fill="currentcolor"
+															d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"
+														></path></svg></span
+												><span class="sr-only"
+													>Section titled
+													“Normalización de
+													Respuestas”</span
+												></a
+											>
+										</div>
+										<p>
+											Todas las respuestas HTTP usan
+											<code dir="auto"
+												>sendResponse()</code
+											>
+											para garantizar formato consistente:
+										</p>
+										<div class="expressive-code">
+											<figure class="frame not-content">
+												<figcaption
+													class="header"
+												></figcaption>
+												<pre
+													data-language="js"
+												><code><div class="ec-line"><div class="code"><span style="--0:#919F9F;--1:#5D6376">// Success</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">{ success: </span><span style="--0:#FF6A83;--1:#A24848">true</span><span style="--0:#D6DEEB;--1:#403F53">, code: </span><span style="--0:#F78C6C;--1:#AA0982">200</span><span style="--0:#D6DEEB;--1:#403F53">, data: {</span><span style="--0:#7FDBCA;--1:#096E72">...</span><span style="--0:#D6DEEB;--1:#403F53">} }</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#919F9F;--1:#5D6376">// Error</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">{ success: </span><span style="--0:#FF6A83;--1:#A24848">false</span><span style="--0:#D6DEEB;--1:#403F53">, code: </span><span style="--0:#F78C6C;--1:#AA0982">400</span><span style="--0:#D6DEEB;--1:#403F53">, error: </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#984E4D">Datos inválidos o incompletos</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53"> }</span></div></div></code></pre>
+												<div class="copy">
+													<button
+														title="Copy to clipboard"
+														data-copied="Copied!"
+														data-code="// Success{ success: true, code: 200, data: {...} }// Error{ success: false, code: 400, error: &#x22;Datos inválidos o incompletos&#x22; }"
+													>
+														<div></div>
+													</button>
+												</div>
+											</figure>
+										</div>
+										<p><strong>Abstracciones:</strong></p>
+										<ul>
+											<li>
+												<code dir="auto">STATUS</code>:
+												Símbolos para estados (<code
+													dir="auto"
+													>STATUS.SUCCESS</code
+												>,
+												<code dir="auto"
+													>STATUS.NOT_FOUND</code
+												>)
+											</li>
+											<li>
+												<code dir="auto">HTTP_MAP</code
+												>: Mapeo de símbolos a códigos
+												numéricos HTTP
+											</li>
+											<li>
+												<code dir="auto"
+													>ERROR_MESSAGES</code
+												>: Mensajes normalizados, evita
+												magic strings
+											</li>
+										</ul>
+										<hr />
+										<div
+											class="sl-heading-wrapper level-h2"
+										>
+											<h2
+												id="persistencia-firebase-firestore"
+											>
+												Persistencia: Firebase Firestore
+											</h2>
+											<a
+												class="sl-anchor-link"
+												href="#persistencia-firebase-firestore"
+												><span
+													aria-hidden="true"
+													class="sl-anchor-icon"
+													><svg
+														width="16"
+														height="16"
+														viewBox="0 0 24 24"
+													>
+														<path
+															fill="currentcolor"
+															d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"
+														></path></svg></span
+												><span class="sr-only"
+													>Section titled
+													“Persistencia: Firebase
+													Firestore”</span
+												></a
+											>
+										</div>
+										<div
+											class="sl-heading-wrapper level-h3"
+										>
+											<h3 id="características">
+												Características
+											</h3>
+											<a
+												class="sl-anchor-link"
+												href="#características"
+												><span
+													aria-hidden="true"
+													class="sl-anchor-icon"
+													><svg
+														width="16"
+														height="16"
+														viewBox="0 0 24 24"
+													>
+														<path
+															fill="currentcolor"
+															d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"
+														></path></svg></span
+												><span class="sr-only"
+													>Section titled
+													“Características”</span
+												></a
+											>
+										</div>
+										<ul>
+											<li>
+												<strong>NoSQL documental</strong
+												>: Colecciones de documentos con
+												esquema flexible
+											</li>
+											<li>
+												<strong
+													>Queries indexadas</strong
+												>:
+												<code dir="auto">where()</code>,
+												<code dir="auto">orderBy()</code
+												>,
+												<code dir="auto">limit()</code>
+												- no son SQL
+											</li>
+											<li>
+												<strong
+													>Sin servidor propio</strong
+												>: Managed service, escalado
+												automático
+											</li>
+											<li>
+												<strong>Limitaciones</strong>:
+												Joins inexistentes, queries
+												complejas requieren
+												denormalización
+											</li>
+										</ul>
+										<div
+											class="sl-heading-wrapper level-h3"
+										>
+											<h3 id="diferencias-con-mongodb">
+												Diferencias con MongoDB
+											</h3>
+											<a
+												class="sl-anchor-link"
+												href="#diferencias-con-mongodb"
+												><span
+													aria-hidden="true"
+													class="sl-anchor-icon"
+													><svg
+														width="16"
+														height="16"
+														viewBox="0 0 24 24"
+													>
+														<path
+															fill="currentcolor"
+															d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"
+														></path></svg></span
+												><span class="sr-only"
+													>Section titled “Diferencias
+													con MongoDB”</span
+												></a
+											>
+										</div>
+
+										<table>
+											<thead>
+												<tr>
+													<th>Aspecto</th>
+													<th>Firestore</th>
+													<th>MongoDB</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>Formato</td>
+													<td>JSON nativo</td>
+													<td>BSON (Binary JSON)</td>
+												</tr>
+												<tr>
+													<td>Hosting</td>
+													<td>Managed (GCP)</td>
+													<td>Self-hosted / Atlas</td>
+												</tr>
+												<tr>
+													<td>Queries</td>
+													<td>
+														Limitadas, indexadas
+														automáticamente
+													</td>
+													<td>
+														Agregaciones complejas,
+														pipelines
+													</td>
+												</tr>
+												<tr>
+													<td>Transacciones</td>
+													<td>
+														Soportadas (ACID en
+														documentos relacionados)
+													</td>
+													<td>
+														Soportadas (ACID
+														multi-documento)
+													</td>
+												</tr>
+											</tbody>
+										</table>
+										<div
+											class="sl-heading-wrapper level-h3"
+										>
+											<h3 id="estructura-actual">
+												Estructura Actual
+											</h3>
+											<a
+												class="sl-anchor-link"
+												href="#estructura-actual"
+												><span
+													aria-hidden="true"
+													class="sl-anchor-icon"
+													><svg
+														width="16"
+														height="16"
+														viewBox="0 0 24 24"
+													>
+														<path
+															fill="currentcolor"
+															d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"
+														></path></svg></span
+												><span class="sr-only"
+													>Section titled “Estructura
+													Actual”</span
+												></a
+											>
+										</div>
+										<div class="expressive-code">
+											<figure class="frame not-content">
+												<figcaption
+													class="header"
+												></figcaption>
+												<pre
+													data-language="plaintext"
+												><code><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">users/</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">  </span></span><span style="--0:#d6deeb;--1:#403f53">└─ {userId}</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">      </span></span><span style="--0:#d6deeb;--1:#403f53">├─ username: string</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">      </span></span><span style="--0:#d6deeb;--1:#403f53">└─ password: string (⚠️ plaintext, solo demo)</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">products/</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">  </span></span><span style="--0:#d6deeb;--1:#403f53">└─ {productId}</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">      </span></span><span style="--0:#d6deeb;--1:#403f53">├─ id: number (internal autoincrement)</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">      </span></span><span style="--0:#d6deeb;--1:#403f53">├─ name: string</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">      </span></span><span style="--0:#d6deeb;--1:#403f53">├─ price: number</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">      </span></span><span style="--0:#d6deeb;--1:#403f53">└─ categories: array&#x3C;string></span></div></div></code></pre>
+												<div class="copy">
+													<button
+														title="Copy to clipboard"
+														data-copied="Copied!"
+														data-code="users/  └─ {userId}      ├─ username: string      └─ password: string (⚠️ plaintext, solo demo)products/  └─ {productId}      ├─ id: number (internal autoincrement)      ├─ name: string      ├─ price: number      └─ categories: array<string>"
+													>
+														<div></div>
+													</button>
+												</div>
+											</figure>
+										</div>
+										<div
+											class="sl-heading-wrapper level-h3"
+										>
+											<h3 id="id-management">
+												ID Management
+											</h3>
+											<a
+												class="sl-anchor-link"
+												href="#id-management"
+												><span
+													aria-hidden="true"
+													class="sl-anchor-icon"
+													><svg
+														width="16"
+														height="16"
+														viewBox="0 0 24 24"
+													>
+														<path
+															fill="currentcolor"
+															d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"
+														></path></svg></span
+												><span class="sr-only"
+													>Section titled “ID
+													Management”</span
+												></a
+											>
+										</div>
+										<p>
+											<strong>Problema conocido</strong>:
+											Race conditions en
+											<code dir="auto"
+												>createProduct()</code
+											>
+											al obtener
+											<code dir="auto">lastId</code> de
+											forma no transaccional.
+										</p>
+										<p>
+											<strong>Solución actual</strong>:
+											Pragmática, suficiente para carga
+											baja/media.
+										</p>
+										<p>
+											<a
+												href="https://firebase.google.com/docs/firestore/manage-data/transactions"
+												><strong
+													>Solución robusta</strong
+												>: Usar transacciones de
+												Firestore</a
+											>
+										</p>
+										<hr />
+										<div
+											class="sl-heading-wrapper level-h2"
+										>
+											<h2 id="seguridad-y-limitaciones">
+												Seguridad y Limitaciones
+											</h2>
+											<a
+												class="sl-anchor-link"
+												href="#seguridad-y-limitaciones"
+												><span
+													aria-hidden="true"
+													class="sl-anchor-icon"
+													><svg
+														width="16"
+														height="16"
+														viewBox="0 0 24 24"
+													>
+														<path
+															fill="currentcolor"
+															d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"
+														></path></svg></span
+												><span class="sr-only"
+													>Section titled “Seguridad y
+													Limitaciones”</span
+												></a
+											>
+										</div>
+										<div
+											class="sl-heading-wrapper level-h3"
+										>
+											<h3 id="implementado">
+												Implementado
+											</h3>
+											<a
+												class="sl-anchor-link"
+												href="#implementado"
+												><span
+													aria-hidden="true"
+													class="sl-anchor-icon"
+													><svg
+														width="16"
+														height="16"
+														viewBox="0 0 24 24"
+													>
+														<path
+															fill="currentcolor"
+															d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"
+														></path></svg></span
+												><span class="sr-only"
+													>Section titled
+													“Implementado”</span
+												></a
+											>
+										</div>
+										<ul>
+											<li>
+												✅ JWT con expiración
+												configurable
+											</li>
+											<li>
+												✅ Middleware de autenticación
+												en rutas protegidas
+											</li>
+											<li>
+												✅ CORS configurado para
+												dominios específicos
+											</li>
+											<li>
+												✅ Validación de payloads en
+												controllers
+											</li>
+											<li>
+												✅ Rate limiting vía Vercel WAF
+											</li>
+										</ul>
+										<div
+											class="sl-heading-wrapper level-h3"
+										>
+											<h3
+												id="pendiente-production-readiness"
+											>
+												Pendiente (Production Readiness)
+											</h3>
+											<a
+												class="sl-anchor-link"
+												href="#pendiente-production-readiness"
+												><span
+													aria-hidden="true"
+													class="sl-anchor-icon"
+													><svg
+														width="16"
+														height="16"
+														viewBox="0 0 24 24"
+													>
+														<path
+															fill="currentcolor"
+															d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"
+														></path></svg></span
+												><span class="sr-only"
+													>Section titled “Pendiente
+													(Production
+													Readiness)”</span
+												></a
+											>
+										</div>
+										<ul>
+											<li>
+												⚠️
+												<strong
+													>Passwords en
+													plaintext</strong
+												>: Implementar bcrypt/argon2
+												hashing
+											</li>
+											<li>
+												⚠️
+												<strong
+													>Validación limitada</strong
+												>: Faltan límites de longitud,
+												sanitización XSS
+											</li>
+											<li>
+												⚠️
+												<strong
+													>Sin logging
+													estructurado</strong
+												>: console.error no escala en
+												producción
+											</li>
+											<li>
+												⚠️
+												<strong
+													>Sin tests
+													automatizados</strong
+												>: Cobertura manual con
+												Postman/HTTP files
+											</li>
+										</ul>
+										<hr />
+										<div
+											class="sl-heading-wrapper level-h2"
+										>
+											<h2 id="escalabilidad-y-evolución">
+												Escalabilidad y Evolución
+											</h2>
+											<a
+												class="sl-anchor-link"
+												href="#escalabilidad-y-evolución"
+												><span
+													aria-hidden="true"
+													class="sl-anchor-icon"
+													><svg
+														width="16"
+														height="16"
+														viewBox="0 0 24 24"
+													>
+														<path
+															fill="currentcolor"
+															d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"
+														></path></svg></span
+												><span class="sr-only"
+													>Section titled
+													“Escalabilidad y
+													Evolución”</span
+												></a
+											>
+										</div>
+										<div
+											class="sl-heading-wrapper level-h3"
+										>
+											<h3
+												id="ventajas-de-la-arquitectura-actual"
+											>
+												Ventajas de la Arquitectura
+												Actual
+											</h3>
+											<a
+												class="sl-anchor-link"
+												href="#ventajas-de-la-arquitectura-actual"
+												><span
+													aria-hidden="true"
+													class="sl-anchor-icon"
+													><svg
+														width="16"
+														height="16"
+														viewBox="0 0 24 24"
+													>
+														<path
+															fill="currentcolor"
+															d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"
+														></path></svg></span
+												><span class="sr-only"
+													>Section titled “Ventajas de
+													la Arquitectura
+													Actual”</span
+												></a
+											>
+										</div>
+										<p>
+											<strong
+												>Desacoplamiento
+												horizontal</strong
+											>: Agregar nuevas entidades (orders,
+											categories) solo requiere nuevo
+											módulo en
+											<code dir="auto">api/</code>, sin
+											modificar infraestructura existente.
+										</p>
+										<p>
+											<strong
+												>Migración de
+												persistencia</strong
+											>: Cambiar Firebase por
+											PostgreSQL/MongoDB solo afecta la
+											capa de Models. Services apenas
+											mutan y Controllers permanecen
+											intactos gracias a la abstracción de
+											<code dir="auto">result</code>
+											objects.
+										</p>
+										<p>
+											<strong>Testing incremental</strong
+											>: Cada capa puede testearse
+											independientemente (unit tests en
+											Services, integration tests en
+											Controllers, E2E en Routes).
+										</p>
+										<div
+											class="sl-heading-wrapper level-h3"
+										>
+											<h3
+												id="próximos-pasos-arquitectónicos"
+											>
+												Próximos Pasos Arquitectónicos
+											</h3>
+											<a
+												class="sl-anchor-link"
+												href="#próximos-pasos-arquitectónicos"
+												><span
+													aria-hidden="true"
+													class="sl-anchor-icon"
+													><svg
+														width="16"
+														height="16"
+														viewBox="0 0 24 24"
+													>
+														<path
+															fill="currentcolor"
+															d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"
+														></path></svg></span
+												><span class="sr-only"
+													>Section titled “Próximos
+													Pasos Arquitectónicos”</span
+												></a
+											>
+										</div>
+										<p>
+											En un nuevo repositorio, o como
+											extensión escalable de este mismo:
+										</p>
+										<ol>
+											<li>
+												<strong
+													>Transacciones en
+													Models</strong
+												>: Resolver race conditions con
+												Firestore transactions
+											</li>
+											<li>
+												<strong
+													>Middleware de
+													validación</strong
+												>: Extraer validaciones
+												repetitivas a middleware
+												reutilizable con Joi/Zod
+											</li>
+											<li>
+												<strong
+													>Error types
+													personalizados</strong
+												>: Clases de error específicas
+												(ValidationError, AuthError)
+												para mejor debugging
+											</li>
+											<li>
+												<strong
+													>Repository pattern</strong
+												>: Abstraer queries complejas en
+												repositorios dedicados si
+												Firestore queries crecen
+											</li>
+										</ol>
+										<hr />
+										<div
+											class="sl-heading-wrapper level-h3"
+										>
+											<h3 id="recursos-utiles">
+												Recursos utiles
+											</h3>
+											<a
+												class="sl-anchor-link"
+												href="#recursos-utiles"
+												><span
+													aria-hidden="true"
+													class="sl-anchor-icon"
+													><svg
+														width="16"
+														height="16"
+														viewBox="0 0 24 24"
+													>
+														<path
+															fill="currentcolor"
+															d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"
+														></path></svg></span
+												><span class="sr-only"
+													>Section titled “Recursos
+													utiles”</span
+												></a
+											>
+										</div>
+										<ul>
+											<li>
+												<a
+													href="https://firebase.google.com/docs/firestore"
+													>Firebase Firestore Docs</a
+												>
+											</li>
+											<li>
+												<a
+													href="https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html"
+													>Clean Architecture (Uncle
+													Bob)</a
+												>
+											</li>
+											<li>
+												<a
+													href="https://expressjs.com/en/advanced/best-practice-performance.html"
+													>Express Best Practices</a
+												>
+											</li>
+											<li>
+												<a
+													href="https://owasp.org/www-project-api-security/"
+													>OWASP API Security Top
+													10</a
+												>
+											</li>
+										</ul>
+									</div>
+									<footer class="sl-flex astro-uutozc4b">
+										<div
+											class="meta sl-flex astro-uutozc4b"
+										></div>
+										<div
+											class="pagination-links print:hidden astro-zylujxy5"
+											dir="ltr"
+										>
+											<a
+												href="/docs/guides/introduction/"
+												rel="prev"
+												class="astro-zylujxy5"
+											>
+												<svg
+													aria-hidden="true"
+													class="astro-zylujxy5 astro-zyiyrzho"
+													width="16"
+													height="16"
+													viewBox="0 0 24 24"
+													fill="currentColor"
+													style="
+														--sl-icon-size: 1.5rem;
+													"
+												>
+													<path
+														d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"
+													/>
+												</svg>
+												<span class="astro-zylujxy5">
+													Previous
+													<br
+														class="astro-zylujxy5"
+													/>
+													<span
+														class="link-title astro-zylujxy5"
+														>Introducción</span
+													>
+												</span>
+											</a>
+										</div>
+									</footer>
+								</div>
+							</div>
+						</main>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
